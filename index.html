@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Demand Generator</title>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #f4f4f4;
+  padding: 20px;
+}
+
+.box {
+  background: #fff;
+  padding: 20px;
+  margin-bottom: 25px;
+  border-radius: 8px;
+  max-width: 650px;
+}
+
+label {
+  font-weight: bold;
+  display: block;
+  margin-top: 10px;
+}
+
+input {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+}
+
+button {
+  margin-top: 15px;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+textarea {
+  width: 100%;
+  height: 150px;
+  margin-top: 10px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>Demand Generator</h1>
+
+<!-- DEMAND: EMAIL CHANGE -->
+<div class="box">
+<h3>Email Change</h3>
+
+<label>Email sent from</label>
+<input id="fromEmail">
+
+<label>Current e-mail</label>
+<input id="currentEmail">
+
+<label>New e-mail</label>
+<input id="newEmail">
+
+<label>Account ID</label>
+<input id="accountId">
+
+<button onclick="generateEmailChange()">Generate</button>
+<textarea id="outputEmailChange" readonly></textarea>
+</div>
+
+<script>
+function generateEmailChange() {
+  outputEmailChange.value =
+`Customer wishes to change their e-mail.
+
+Email sent from - ${fromEmail.value}
+
+Current e-mail - ${currentEmail.value}
+
+New e-mail - ${newEmail.value}
+
+Account ID - ${accountId.value}`;
+}
+</script>
+
+</body>
+</html>
