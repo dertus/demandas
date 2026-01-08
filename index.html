@@ -159,18 +159,22 @@ button {
 <!-- COMPROVANTE DE SAQUE -->
 <div id="withdrawal" class="box section">
 <h1>Comprovante de Saque</h1>
+
 <label>VIP</label><input id="withdraw_vip" required>
 <label>Client ID</label><input id="withdraw_client" required>
 <label>Transaction ID</label><input id="withdraw_trans" required>
 <label>Transaction Status</label><input id="withdraw_status" required>
 <label>Method</label><input id="withdraw_method" required>
+
 <label>Escolha a frase</label>
-<select id="withdraw_phrase" required>
-  <option value="">Selecione uma frase</option>
-  <option value="Please, share the withdrawal receipt for this transaction.">Frase 1</option>
-  <option value="The player claims that the deposit was not credited.">Frase 2</option>
-  <option value="Rejected deposit, user says the amount did not return to his account">Frase 3</option>
+<select id="withdraw_phrase" required onchange="showPhrase()">
+  <option value="">Selecione a frase</option>
+  <option value="Please, share the withdrawal receipt for this transaction.">Please, share the withdrawal receipt for this transaction.</option>
+  <option value="The player claims that the deposit was not credited.">The player claims that the deposit was not credited.</option>
+  <option value="Rejected deposit, user says the amount did not return to his account">Rejected deposit, user says the amount did not return to his account</option>
 </select>
+
+<p id="display_phrase" style="margin-top:6px;font-style:italic;color:#333;"></p>
 
 <div class="buttons">
 <button onclick="genWithdrawal()">Gerar</button>
@@ -180,6 +184,14 @@ button {
 
 <textarea id="out_withdrawal" readonly></textarea>
 </div>
+
+<script>
+function showPhrase(){
+  const sel = document.getElementById("withdraw_phrase");
+  document.getElementById("display_phrase").innerText = sel.value;
+}
+</script>
+
 
 <!-- VALOR PARA SAQUE -->
 <div id="withdraw" class="box section">
