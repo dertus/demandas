@@ -117,7 +117,7 @@ textarea {
 
 <div class="content">
 
-<!-- EMAIL -->
+<!-- MUDAR EMAIL -->
 <div id="email" class="box section active">
 <h1>Mudar E-mail</h1>
 
@@ -134,12 +134,12 @@ textarea {
 <input id="email_id">
 
 <button onclick="genEmail()">Gerar</button>
-<button onclick="sendTelegram('out_email')">Telegram</button>
+<button class="telegram" onclick="sendTelegram('out_email')">Telegram</button>
 
 <textarea id="out_email" readonly></textarea>
 </div>
 
-<!-- PHONE -->
+<!-- MUDAR TELEFONE -->
 <div id="phone" class="box section">
 <h1>Mudar Telefone</h1>
 
@@ -156,12 +156,12 @@ textarea {
 <input id="phone_id">
 
 <button onclick="genPhone()">Gerar</button>
-<button onclick="sendTelegram('out_phone')">Telegram</button>
+<button class="telegram" onclick="sendTelegram('out_phone')">Telegram</button>
 
 <textarea id="out_phone" readonly></textarea>
 </div>
 
-<!-- DEPOSIT -->
+<!-- COMPROVANTE DEPÓSITO -->
 <div id="deposit" class="box section">
 <h1>Comprovante de Depósito</h1>
 
@@ -172,12 +172,12 @@ textarea {
 <input id="dep_date">
 
 <button onclick="genDeposit()">Gerar</button>
-<button onclick="sendTelegram('out_deposit')">Telegram</button>
+<button class="telegram" onclick="sendTelegram('out_deposit')">Telegram</button>
 
 <textarea id="out_deposit" readonly></textarea>
 </div>
 
-<!-- WITHDRAW -->
+<!-- VALOR PARA SAQUE -->
 <div id="withdraw" class="box section">
 <h1>Valor para Saque</h1>
 
@@ -185,12 +185,12 @@ textarea {
 <input id="with_id">
 
 <button onclick="genWithdraw()">Gerar</button>
-<button onclick="sendTelegram('out_withdraw')">Telegram</button>
+<button class="telegram" onclick="sendTelegram('out_withdraw')">Telegram</button>
 
 <textarea id="out_withdraw" readonly></textarea>
 </div>
 
-<!-- UNLOCK -->
+<!-- DESBLOQUEAR CONTA -->
 <div id="unlock" class="box section">
 <h1>Desbloquear Conta</h1>
 
@@ -198,12 +198,12 @@ textarea {
 <input id="unlock_id">
 
 <button onclick="genUnlock()">Gerar</button>
-<button onclick="sendTelegram('out_unlock')">Telegram</button>
+<button class="telegram" onclick="sendTelegram('out_unlock')">Telegram</button>
 
 <textarea id="out_unlock" readonly></textarea>
 </div>
 
-<!-- WAGER -->
+<!-- VALOR NO WAGER -->
 <div id="wager" class="box section">
 <h1>Valor no Wager</h1>
 
@@ -211,7 +211,7 @@ textarea {
 <input id="wager_id">
 
 <button onclick="genWager()">Gerar</button>
-<button onclick="sendTelegram('out_wager')">Telegram</button>
+<button class="telegram" onclick="sendTelegram('out_wager')">Telegram</button>
 
 <textarea id="out_wager" readonly></textarea>
 </div>
@@ -231,10 +231,11 @@ function sendTelegram(textareaId) {
     return;
   }
   navigator.clipboard.writeText(text).then(() => {
-    window.open("https://t.me/savedmessages", "_blank");
+    window.open("https://t.me/+9mCTJhflLbo1YWZh", "_blank");
   });
 }
 
+/* GERADORES */
 function genEmail() {
   out_email.value =
 `Customer wishes to change their e-mail.
