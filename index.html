@@ -142,18 +142,22 @@ textarea {
 <div id="phone" class="box section">
 <h1>Mudar Telefone</h1>
 
-<label>Telefone atual</label>
+<label>Email sent from</label>
+<input id="phone_email">
+
+<label>Current phone</label>
 <input id="phone_current">
 
-<label>Novo telefone</label>
+<label>New phone</label>
 <input id="phone_new">
 
-<label>ID da conta</label>
+<label>Account ID</label>
 <input id="phone_id">
 
 <button class="generate" onclick="genPhone()">Gerar</button>
 <textarea id="out_phone" readonly></textarea>
 </div>
+
 
 <!-- COMPROVANTE DEPÓSITO -->
 <div id="deposit" class="box section">
@@ -227,11 +231,14 @@ function genPhone() {
   out_phone.value =
 `Customer wishes to change their phone number.
 
+Email sent from - ${phone_email.value}
+
 Current phone - ${phone_current.value}
 
 New phone - ${phone_new.value}
 
 Account ID - ${phone_id.value}`;
+
 }
 
 function genDeposit() {
