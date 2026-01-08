@@ -71,21 +71,11 @@ button { padding:6px 10px; font-size:12px; cursor:pointer; }
 </div>
 
 <!-- COMPROVANTE DE SAQUE -->
-<div id="withdrawal" class="box section">
-<h1>Comprovante de Saque</h1>
-
-<label>VIP</label><input id="withdraw_vip" required>
-<label>Client ID</label><input id="withdraw_client" required>
-<label>Transaction ID</label><input id="withdraw_trans" required>
-<label>Transaction Status</label><input id="withdraw_status" required>
-<label>Method</label><input id="withdraw_method" required>
-
 <label>Escolha a frase</label>
-<div style="margin-top:6px;">
-
+<div class="phrases-container">
   <div class="phrase-item">
     <input type="checkbox" name="withdraw_phrase" value="Please, share the withdrawal receipt for this transaction." onclick="onlyOne(this)">
-    <div class="phrase-text">
+    <div class="text">
       <div class="english">Please, share the withdrawal receipt for this transaction.</div>
       <div class="portuguese">Por favor, compartilhe o comprovante de saque desta transação.</div>
     </div>
@@ -93,7 +83,7 @@ button { padding:6px 10px; font-size:12px; cursor:pointer; }
 
   <div class="phrase-item">
     <input type="checkbox" name="withdraw_phrase" value="The player claims that the deposit was not credited." onclick="onlyOne(this)">
-    <div class="phrase-text">
+    <div class="text">
       <div class="english">The player claims that the deposit was not credited.</div>
       <div class="portuguese">O jogador afirma que o depósito não foi creditado.</div>
     </div>
@@ -101,44 +91,47 @@ button { padding:6px 10px; font-size:12px; cursor:pointer; }
 
   <div class="phrase-item">
     <input type="checkbox" name="withdraw_phrase" value="Rejected deposit, user says the amount did not return to his account" onclick="onlyOne(this)">
-    <div class="phrase-text">
+    <div class="text">
       <div class="english">Rejected deposit, user says the amount did not return to his account</div>
       <div class="portuguese">Depósito rejeitado, o usuário diz que o valor não retornou à sua conta.</div>
     </div>
   </div>
-
 </div>
-
-<p id="display_phrase" style="margin-top:6px;font-style:italic;color:#333;"></p>
-
-<div class="buttons">
-<button onclick="genWithdrawal()">Gerar</button>
-<button class="copy" onclick="copyText('out_withdrawal')">Copiar</button>
-<button class="telegram" onclick="sendTelegram('out_withdrawal')">Telegram</button>
-</div>
-
-<textarea id="out_withdrawal" readonly></textarea>
 
 <style>
+.phrases-container {
+  margin-top: 4px;
+}
+
 .phrase-item {
   display: flex;
   align-items: flex-start;
-  margin-bottom: 8px;
+  gap: 8px; /* distância entre checkbox e texto */
+  margin-bottom: 6px;
 }
+
 .phrase-item input[type=checkbox] {
-  margin-right: 8px;
-  margin-top: 4px; /* Alinha verticalmente com a frase */
+  margin-top: 4px; /* alinha verticalmente com a frase em inglês */
+  flex-shrink: 0;
 }
-.phrase-text .english {
+
+.phrase-item .text {
+  display: flex;
+  flex-direction: column;
+}
+
+.phrase-item .english {
   font-size:12px;
   font-weight:bold;
 }
-.phrase-text .portuguese {
+
+.phrase-item .portuguese {
   font-size:12px;
   color:#555;
-  margin-left:0; /* recuo já está pelo checkbox */
+  margin-top:2px;
 }
 </style>
+
 
 
 <!-- VALOR PARA SAQUE -->
