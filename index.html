@@ -73,6 +73,7 @@ button { padding:6px 10px; font-size:12px; cursor:pointer; }
 <!-- COMPROVANTE DE SAQUE -->
 <div id="withdrawal" class="box section">
 <h1>Comprovante de Saque</h1>
+
 <label>VIP</label><input id="withdraw_vip" required>
 <label>Client ID</label><input id="withdraw_client" required>
 <label>Transaction ID</label><input id="withdraw_trans" required>
@@ -81,37 +82,64 @@ button { padding:6px 10px; font-size:12px; cursor:pointer; }
 
 <label>Escolha a frase</label>
 <div style="margin-top:6px;">
-  <div style="margin-bottom:8px;">
-    <label style="display:flex; align-items:center; cursor:pointer; font-size:12px;">
-      <input type="checkbox" name="withdraw_phrase" value="Please, share the withdrawal receipt for this transaction." onclick="onlyOne(this)" style="margin-right:6px;">
-      Please, share the withdrawal receipt for this transaction.
-    </label>
-    <div style="font-size:12px;color:#555;margin-left:20px;">Por favor, compartilhe o comprovante de saque desta transação.</div>
+
+  <div class="phrase-item">
+    <input type="checkbox" name="withdraw_phrase" value="Please, share the withdrawal receipt for this transaction." onclick="onlyOne(this)">
+    <div class="phrase-text">
+      <div class="english">Please, share the withdrawal receipt for this transaction.</div>
+      <div class="portuguese">Por favor, compartilhe o comprovante de saque desta transação.</div>
+    </div>
   </div>
-  <div style="margin-bottom:8px;">
-    <label style="display:flex; align-items:center; cursor:pointer; font-size:12px;">
-      <input type="checkbox" name="withdraw_phrase" value="The player claims that the deposit was not credited." onclick="onlyOne(this)" style="margin-right:6px;">
-      The player claims that the deposit was not credited.
-    </label>
-    <div style="font-size:12px;color:#555;margin-left:20px;">O jogador afirma que o depósito não foi creditado.</div>
+
+  <div class="phrase-item">
+    <input type="checkbox" name="withdraw_phrase" value="The player claims that the deposit was not credited." onclick="onlyOne(this)">
+    <div class="phrase-text">
+      <div class="english">The player claims that the deposit was not credited.</div>
+      <div class="portuguese">O jogador afirma que o depósito não foi creditado.</div>
+    </div>
   </div>
-  <div style="margin-bottom:8px;">
-    <label style="display:flex; align-items:center; cursor:pointer; font-size:12px;">
-      <input type="checkbox" name="withdraw_phrase" value="Rejected deposit, user says the amount did not return to his account" onclick="onlyOne(this)" style="margin-right:6px;">
-      Rejected deposit, user says the amount did not return to his account
-    </label>
-    <div style="font-size:12px;color:#555;margin-left:20px;">Depósito rejeitado, o usuário diz que o valor não retornou à sua conta.</div>
+
+  <div class="phrase-item">
+    <input type="checkbox" name="withdraw_phrase" value="Rejected deposit, user says the amount did not return to his account" onclick="onlyOne(this)">
+    <div class="phrase-text">
+      <div class="english">Rejected deposit, user says the amount did not return to his account</div>
+      <div class="portuguese">Depósito rejeitado, o usuário diz que o valor não retornou à sua conta.</div>
+    </div>
   </div>
+
 </div>
 
 <p id="display_phrase" style="margin-top:6px;font-style:italic;color:#333;"></p>
+
 <div class="buttons">
 <button onclick="genWithdrawal()">Gerar</button>
 <button class="copy" onclick="copyText('out_withdrawal')">Copiar</button>
 <button class="telegram" onclick="sendTelegram('out_withdrawal')">Telegram</button>
 </div>
+
 <textarea id="out_withdrawal" readonly></textarea>
-</div>
+
+<style>
+.phrase-item {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 8px;
+}
+.phrase-item input[type=checkbox] {
+  margin-right: 8px;
+  margin-top: 4px; /* Alinha verticalmente com a frase */
+}
+.phrase-text .english {
+  font-size:12px;
+  font-weight:bold;
+}
+.phrase-text .portuguese {
+  font-size:12px;
+  color:#555;
+  margin-left:0; /* recuo já está pelo checkbox */
+}
+</style>
+
 
 <!-- VALOR PARA SAQUE -->
 <div id="withdraw" class="box section">
