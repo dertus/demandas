@@ -2,20 +2,53 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Mudar E-mail</title>
+<title>Demandas</title>
 
 <style>
 body {
+  margin: 0;
   font-family: Arial, sans-serif;
   background: #f4f4f4;
-  margin: 0;
-  padding: 10px;
+  overflow: hidden;
 }
 
-h1 {
-  margin: 10px 0 15px;
-  font-size: 20px;
+/* SIDEBAR */
+.sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 220px;
+  height: 100vh;
+  background: #2c2c2c;
+  color: #fff;
+  padding-top: 20px;
+}
+
+.sidebar h2 {
   text-align: center;
+  font-size: 16px;
+  margin-bottom: 15px;
+}
+
+.sidebar button {
+  width: 100%;
+  background: none;
+  border: none;
+  color: #fff;
+  padding: 10px 15px;
+  text-align: left;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.sidebar button:hover {
+  background: #444;
+}
+
+/* CONTENT */
+.content {
+  margin-left: 220px;
+  padding: 15px;
 }
 
 .box {
@@ -23,14 +56,18 @@ h1 {
   padding: 15px;
   border-radius: 8px;
   max-width: 520px;
-  margin: 0 auto;
+}
+
+h1 {
+  font-size: 18px;
+  margin-bottom: 10px;
 }
 
 label {
   font-weight: bold;
   font-size: 12px;
-  margin-top: 6px;
   display: block;
+  margin-top: 6px;
 }
 
 input {
@@ -40,7 +77,7 @@ input {
   font-size: 12px;
 }
 
-button {
+button.generate {
   margin-top: 10px;
   padding: 6px 10px;
   font-size: 12px;
@@ -49,53 +86,184 @@ button {
 
 textarea {
   width: 100%;
-  height: 100px;
+  height: 95px;
   margin-top: 8px;
   padding: 6px;
   font-size: 12px;
+}
+
+/* HIDE SECTIONS */
+.section {
+  display: none;
+}
+.section.active {
+  display: block;
 }
 </style>
 </head>
 
 <body>
 
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <h2>Demandas</h2>
+  <button onclick="showSection('email')">Mudar E-mail</button>
+  <button onclick="showSection('phone')">Mudar Telefone</button>
+  <button onclick="showSection('deposit')">Comprovante Depósito</button>
+  <button onclick="showSection('withdraw')">Valor para Saque</button>
+  <button onclick="showSection('unlock')">Desbloquear Conta</button>
+  <button onclick="showSection('wager')">Valor no Wager</button>
+</div>
+
+<!-- CONTENT -->
+<div class="content">
+
+<!-- MUDAR EMAIL -->
+<div id="email" class="box section active">
 <h1>Mudar E-mail</h1>
 
-<div class="box">
-
 <label>E-mail enviado de</label>
-<input id="fromEmail">
+<input id="email_from">
 
 <label>E-mail atual</label>
-<input id="currentEmail">
+<input id="email_current">
 
 <label>Novo e-mail</label>
-<input id="newEmail">
+<input id="email_new">
 
 <label>ID da conta</label>
-<input id="accountId">
+<input id="email_id">
 
-<button onclick="gerarTexto()">Gerar</button>
+<button class="generate" onclick="genEmail()">Gerar</button>
+<textarea id="out_email" readonly></textarea>
+</div>
 
-<textarea id="resultado" readonly></textarea>
+<!-- MUDAR TELEFONE -->
+<div id="phone" class="box section">
+<h1>Mudar Telefone</h1>
+
+<label>Telefone atual</label>
+<input id="phone_current">
+
+<label>Novo telefone</label>
+<input id="phone_new">
+
+<label>ID da conta</label>
+<input id="phone_id">
+
+<button class="generate" onclick="genPhone()">Gerar</button>
+<textarea id="out_phone" readonly></textarea>
+</div>
+
+<!-- COMPROVANTE DEPÓSITO -->
+<div id="deposit" class="box section">
+<h1>Comprovante de Depósito</h1>
+
+<label>ID da conta</label>
+<input id="dep_id">
+
+<label>Data do depósito</label>
+<input id="dep_date">
+
+<button class="generate" onclick="genDeposit()">Gerar</button>
+<textarea id="out_deposit" readonly></textarea>
+</div>
+
+<!-- VALOR PARA SAQUE -->
+<div id="withdraw" class="box section">
+<h1>Valor para Saque</h1>
+
+<label>ID da conta</label>
+<input id="with_id">
+
+<button class="generate" onclick="genWithdraw()">Gerar</button>
+<textarea id="out_withdraw" readonly></textarea>
+</div>
+
+<!-- DESBLOQUEAR CONTA -->
+<div id="unlock" class="box section">
+<h1>Desbloquear Conta</h1>
+
+<label>ID da conta</label>
+<input id="unlock_id">
+
+<button class="generate" onclick="genUnlock()">Gerar</button>
+<textarea id="out_unlock" readonly></textarea>
+</div>
+
+<!-- VALOR NO WAGER -->
+<div id="wager" class="box section">
+<h1>Valor no Wager</h1>
+
+<label>ID da conta</label>
+<input id="wager_id">
+
+<button class="generate" onclick="genWager()">Gerar</button>
+<textarea id="out_wager" readonly></textarea>
+</div>
 
 </div>
 
 <script>
-function gerarTexto() {
-  resultado.value =
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function genEmail() {
+  out_email.value =
 `Customer wishes to change their e-mail.
 
-Email sent from - ${fromEmail.value}
+Email sent from - ${email_from.value}
 
-Current e-mail - ${currentEmail.value}
+Current e-mail - ${email_current.value}
 
-New e-mail - ${newEmail.value}
+New e-mail - ${email_new.value}
 
-Account ID - ${accountId.value}`;
+Account ID - ${email_id.value}`;
+}
+
+function genPhone() {
+  out_phone.value =
+`Customer wishes to change their phone number.
+
+Current phone - ${phone_current.value}
+
+New phone - ${phone_new.value}
+
+Account ID - ${phone_id.value}`;
+}
+
+function genDeposit() {
+  out_deposit.value =
+`Customer requests deposit receipt.
+
+Account ID - ${dep_id.value}
+
+Deposit date - ${dep_date.value}`;
+}
+
+function genWithdraw() {
+  out_withdraw.value =
+`Customer requests withdrawal amount.
+
+Account ID - ${with_id.value}`;
+}
+
+function genUnlock() {
+  out_unlock.value =
+`Customer requests account unlock.
+
+Account ID - ${unlock_id.value}`;
+}
+
+function genWager() {
+  out_wager.value =
+`Customer requests wager amount.
+
+Account ID - ${wager_id.value}`;
 }
 </script>
 
 </body>
 </html>
-
