@@ -77,8 +77,8 @@ input {
   font-size: 12px;
 }
 
-button.generate {
-  margin-top: 10px;
+button.generate, button.copy {
+  margin-top: 8px;
   padding: 6px 10px;
   font-size: 12px;
   cursor: pointer;
@@ -93,12 +93,8 @@ textarea {
 }
 
 /* HIDE SECTIONS */
-.section {
-  display: none;
-}
-.section.active {
-  display: block;
-}
+.section { display: none; }
+.section.active { display: block; }
 </style>
 </head>
 
@@ -109,10 +105,6 @@ textarea {
   <h2>Demandas</h2>
   <button onclick="showSection('email')">Mudar E-mail</button>
   <button onclick="showSection('phone')">Mudar Telefone</button>
-  <button onclick="showSection('deposit')">Comprovante Depósito</button>
-  <button onclick="showSection('withdraw')">Valor para Saque</button>
-  <button onclick="showSection('unlock')">Desbloquear Conta</button>
-  <button onclick="showSection('wager')">Valor no Wager</button>
 </div>
 
 <!-- CONTENT -->
@@ -122,19 +114,21 @@ textarea {
 <div id="email" class="box section active">
 <h1>Mudar E-mail</h1>
 
-<label>E-mail enviado de</label>
+<label>Email sent from</label>
 <input id="email_from">
 
-<label>E-mail atual</label>
+<label>Current e-mail</label>
 <input id="email_current">
 
-<label>Novo e-mail</label>
+<label>New e-mail</label>
 <input id="email_new">
 
-<label>ID da conta</label>
+<label>Account ID</label>
 <input id="email_id">
 
 <button class="generate" onclick="genEmail()">Gerar</button>
+<button class="copy" onclick="copyText('out_email')">Copiar</button>
+
 <textarea id="out_email" readonly></textarea>
 </div>
 
@@ -155,55 +149,9 @@ textarea {
 <input id="phone_id">
 
 <button class="generate" onclick="genPhone()">Gerar</button>
+<button class="copy" onclick="copyText('out_phone')">Copiar</button>
+
 <textarea id="out_phone" readonly></textarea>
-</div>
-
-
-<!-- COMPROVANTE DEPÓSITO -->
-<div id="deposit" class="box section">
-<h1>Comprovante de Depósito</h1>
-
-<label>ID da conta</label>
-<input id="dep_id">
-
-<label>Data do depósito</label>
-<input id="dep_date">
-
-<button class="generate" onclick="genDeposit()">Gerar</button>
-<textarea id="out_deposit" readonly></textarea>
-</div>
-
-<!-- VALOR PARA SAQUE -->
-<div id="withdraw" class="box section">
-<h1>Valor para Saque</h1>
-
-<label>ID da conta</label>
-<input id="with_id">
-
-<button class="generate" onclick="genWithdraw()">Gerar</button>
-<textarea id="out_withdraw" readonly></textarea>
-</div>
-
-<!-- DESBLOQUEAR CONTA -->
-<div id="unlock" class="box section">
-<h1>Desbloquear Conta</h1>
-
-<label>ID da conta</label>
-<input id="unlock_id">
-
-<button class="generate" onclick="genUnlock()">Gerar</button>
-<textarea id="out_unlock" readonly></textarea>
-</div>
-
-<!-- VALOR NO WAGER -->
-<div id="wager" class="box section">
-<h1>Valor no Wager</h1>
-
-<label>ID da conta</label>
-<input id="wager_id">
-
-<button class="generate" onclick="genWager()">Gerar</button>
-<textarea id="out_wager" readonly></textarea>
 </div>
 
 </div>
@@ -238,37 +186,12 @@ Current phone - ${phone_current.value}
 New phone - ${phone_new.value}
 
 Account ID - ${phone_id.value}`;
-
 }
 
-function genDeposit() {
-  out_deposit.value =
-`Customer requests deposit receipt.
-
-Account ID - ${dep_id.value}
-
-Deposit date - ${dep_date.value}`;
-}
-
-function genWithdraw() {
-  out_withdraw.value =
-`Customer requests withdrawal amount.
-
-Account ID - ${with_id.value}`;
-}
-
-function genUnlock() {
-  out_unlock.value =
-`Customer requests account unlock.
-
-Account ID - ${unlock_id.value}`;
-}
-
-function genWager() {
-  out_wager.value =
-`Customer requests wager amount.
-
-Account ID - ${wager_id.value}`;
+function copyText(id) {
+  const textarea = document.getElementById(id);
+  textarea.select();
+  document.execCommand("copy");
 }
 </script>
 
