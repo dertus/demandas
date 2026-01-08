@@ -167,12 +167,16 @@ button {
 <label>Method</label><input id="withdraw_method" required>
 
 <label>Escolha a frase</label>
-<select id="withdraw_phrase" required onchange="showPhrase()">
-  <option value="">Selecione a frase</option>
-  <option value="Please, share the withdrawal receipt for this transaction.">Please, share the withdrawal receipt for this transaction.</option>
-  <option value="The player claims that the deposit was not credited.">The player claims that the deposit was not credited.</option>
-  <option value="Rejected deposit, user says the amount did not return to his account">Rejected deposit, user says the amount did not return to his account</option>
-</select>
+<div style="margin-top:4px;">
+  <div style="font-size:12px;color:#555;margin-bottom:2px;">Por favor, compartilhe o comprovante de saque desta transação.</div>
+  <input type="checkbox" name="withdraw_phrase" value="Please, share the withdrawal receipt for this transaction." onclick="onlyOne(this)"> Please, share the withdrawal receipt for this transaction.<br>
+
+  <div style="font-size:12px;color:#555;margin-bottom:2px;">O jogador afirma que o depósito não foi creditado.</div>
+  <input type="checkbox" name="withdraw_phrase" value="The player claims that the deposit was not credited." onclick="onlyOne(this)"> The player claims that the deposit was not credited.<br>
+
+  <div style="font-size:12px;color:#555;margin-bottom:2px;">Depósito rejeitado, o usuário diz que o valor não retornou à sua conta.</div>
+  <input type="checkbox" name="withdraw_phrase" value="Rejected deposit, user says the amount did not return to his account" onclick="onlyOne(this)"> Rejected deposit, user says the amount did not return to his account
+</div>
 
 <p id="display_phrase" style="margin-top:6px;font-style:italic;color:#333;"></p>
 
@@ -186,9 +190,47 @@ button {
 </div>
 
 <script>
+// Limita para selecionar apenas 1 checkbox
+function onlyOne(checkbox) {
+  const checkboxes = document.getElementsByName('withdraw_phrase');
+  checkboxes.forEach((item) => {
+    if (item !== checkbox) item.checked = false;
+  });
+  showPhrase();
+}
+
+// Mostra a frase escolhida abaixo
 function showPhrase(){
-  const sel = document.getElementById("withdraw_phrase");
-  document.getElementById("display_phrase").innerText = sel.value;
+  const selected = document.querySelector('input[name="withdraw_phrase"]:checked');
+  document.getElementById('display_phrase').innerText = selected ? selected.value : '';
+}
+
+// Gera o texto do Comprovante de Saque
+function genWithdrawal(){
+  const vip = document.getElementById('withdraw_vip').value.trim();
+  const client = document.getElementById('withdraw_client').value.trim();
+  const trans = document.getElementById('withdraw_trans').value.trim();
+  const status = document.getElementById('withdraw_status').value.trim();
+  const method = document.getElementById('withdraw_method').value.trim();
+  const phraseEl = document.querySelector('input[name="withdraw_phrase"]:checked');
+
+  if(!vip || !client || !trans || !status || !method || !phraseEl){
+    alert("Preencha todos os campos e escolha uma frase.");
+    return;
+  }
+
+  const phrase = phraseEl.value;
+
+  document.getElementById('out_withdrawal').value = 
+`VIP: ${vip}
+Client ID: ${client}
+Transaction ID: ${trans}
+Transaction Status: ${status}
+Method: ${method}
+Country: Brazil
+Currency: BRL
+
+${phrase}`;
 }
 </script>
 
