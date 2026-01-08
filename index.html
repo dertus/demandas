@@ -77,9 +77,7 @@ input {
   font-size: 12px;
 }
 
-button.generate,
-button.copy,
-button.telegram {
+button {
   margin-top: 8px;
   padding: 6px 10px;
   font-size: 12px;
@@ -100,7 +98,6 @@ textarea {
   font-size: 12px;
 }
 
-/* SECTIONS */
 .section { display: none; }
 .section.active { display: block; }
 </style>
@@ -108,21 +105,19 @@ textarea {
 
 <body>
 
-<!-- SIDEBAR -->
 <div class="sidebar">
   <h2>Demandas</h2>
-  <button onclick="showSection('email')">Mudar E-mail</button>
-  <button onclick="showSection('phone')">Mudar Telefone</button>
-  <button onclick="showSection('deposit')">Comprovante de Depósito</button>
-  <button onclick="showSection('withdraw')">Valor para Saque</button>
-  <button onclick="showSection('unlock')">Desbloquear Conta</button>
-  <button onclick="showSection('wager')">Valor no Wager</button>
+  <button onclick="show('email')">Mudar E-mail</button>
+  <button onclick="show('phone')">Mudar Telefone</button>
+  <button onclick="show('deposit')">Comprovante de Depósito</button>
+  <button onclick="show('withdraw')">Valor para Saque</button>
+  <button onclick="show('unlock')">Desbloquear Conta</button>
+  <button onclick="show('wager')">Valor no Wager</button>
 </div>
 
-<!-- CONTENT -->
 <div class="content">
 
-<!-- MUDAR EMAIL -->
+<!-- EMAIL -->
 <div id="email" class="box section active">
 <h1>Mudar E-mail</h1>
 
@@ -138,17 +133,13 @@ textarea {
 <label>Account ID</label>
 <input id="email_id">
 
-<button class="generate" onclick="genEmail()">Gerar</button>
-<button class="copy" onclick="copyText('out_email')">Copiar</button>
-<button class="telegram"
-        onclick="window.open('https://t.me/+9mCTJhflLbo1YWZh','_blank')">
-  Telegram
-</button>
+<button onclick="genEmail()">Gerar</button>
+<button onclick="sendTelegram('out_email')">Telegram</button>
 
 <textarea id="out_email" readonly></textarea>
 </div>
 
-<!-- MUDAR TELEFONE -->
+<!-- PHONE -->
 <div id="phone" class="box section">
 <h1>Mudar Telefone</h1>
 
@@ -164,13 +155,13 @@ textarea {
 <label>Account ID</label>
 <input id="phone_id">
 
-<button class="generate" onclick="genPhone()">Gerar</button>
-<button class="copy" onclick="copyText('out_phone')">Copiar</button>
+<button onclick="genPhone()">Gerar</button>
+<button onclick="sendTelegram('out_phone')">Telegram</button>
 
 <textarea id="out_phone" readonly></textarea>
 </div>
 
-<!-- COMPROVANTE DEPÓSITO -->
+<!-- DEPOSIT -->
 <div id="deposit" class="box section">
 <h1>Comprovante de Depósito</h1>
 
@@ -180,47 +171,47 @@ textarea {
 <label>Deposit date</label>
 <input id="dep_date">
 
-<button class="generate" onclick="genDeposit()">Gerar</button>
-<button class="copy" onclick="copyText('out_deposit')">Copiar</button>
+<button onclick="genDeposit()">Gerar</button>
+<button onclick="sendTelegram('out_deposit')">Telegram</button>
 
 <textarea id="out_deposit" readonly></textarea>
 </div>
 
-<!-- VALOR PARA SAQUE -->
+<!-- WITHDRAW -->
 <div id="withdraw" class="box section">
 <h1>Valor para Saque</h1>
 
 <label>Account ID</label>
 <input id="with_id">
 
-<button class="generate" onclick="genWithdraw()">Gerar</button>
-<button class="copy" onclick="copyText('out_withdraw')">Copiar</button>
+<button onclick="genWithdraw()">Gerar</button>
+<button onclick="sendTelegram('out_withdraw')">Telegram</button>
 
 <textarea id="out_withdraw" readonly></textarea>
 </div>
 
-<!-- DESBLOQUEAR CONTA -->
+<!-- UNLOCK -->
 <div id="unlock" class="box section">
 <h1>Desbloquear Conta</h1>
 
 <label>Account ID</label>
 <input id="unlock_id">
 
-<button class="generate" onclick="genUnlock()">Gerar</button>
-<button class="copy" onclick="copyText('out_unlock')">Copiar</button>
+<button onclick="genUnlock()">Gerar</button>
+<button onclick="sendTelegram('out_unlock')">Telegram</button>
 
 <textarea id="out_unlock" readonly></textarea>
 </div>
 
-<!-- VALOR NO WAGER -->
+<!-- WAGER -->
 <div id="wager" class="box section">
 <h1>Valor no Wager</h1>
 
 <label>Account ID</label>
 <input id="wager_id">
 
-<button class="generate" onclick="genWager()">Gerar</button>
-<button class="copy" onclick="copyText('out_wager')">Copiar</button>
+<button onclick="genWager()">Gerar</button>
+<button onclick="sendTelegram('out_wager')">Telegram</button>
 
 <textarea id="out_wager" readonly></textarea>
 </div>
@@ -228,9 +219,20 @@ textarea {
 </div>
 
 <script>
-function showSection(id) {
+function show(id) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
+}
+
+function sendTelegram(textareaId) {
+  const text = document.getElementById(textareaId).value;
+  if (!text) {
+    alert("Gere o texto primeiro.");
+    return;
+  }
+  navigator.clipboard.writeText(text).then(() => {
+    window.open("https://t.me/savedmessages", "_blank");
+  });
 }
 
 function genEmail() {
@@ -287,12 +289,6 @@ function genWager() {
 `Customer requests wager amount.
 
 Account ID - ${wager_id.value}`;
-}
-
-function copyText(id) {
-  const textarea = document.getElementById(id);
-  textarea.select();
-  document.execCommand("copy");
 }
 </script>
 
