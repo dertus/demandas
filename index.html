@@ -6,35 +6,86 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-body{margin:0;font-family:Arial,sans-serif;background:#f4f4f4;overflow-x:hidden}
-.sidebar{position:fixed;width:220px;height:100vh;background:#2c2c2c;color:#fff;padding-top:20px}
-.sidebar h2{text-align:center;font-size:15px;margin-bottom:10px}
-.sidebar button{width:100%;background:none;border:none;color:#fff;padding:10px;text-align:left;cursor:pointer;font-size:13px}
-.sidebar button:hover{background:#444}
-.content{margin-left:220px;padding:15px}
-.box{background:#fff;padding:14px;border-radius:8px;max-width:620px}
-h1{font-size:17px;margin:0 0 8px 0}
-label{font-size:12px;font-weight:bold;margin-top:6px;display:block}
-input{width:100%;padding:6px;margin-top:3px;font-size:12px;box-sizing:border-box}
-textarea{width:100%;height:110px;margin-top:8px;padding:6px;font-size:12px;box-sizing:border-box}
-.buttons{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
-button{padding:6px 10px;font-size:12px;cursor:pointer}
-.copy{background:#ddd;border:none}
-.telegram{background:#2aabee;color:#fff;border:none}
-.clear{background:#f0f0f0;border:1px solid #ccc}
-.section{display:none}
-.section.active{display:block}
+  body { margin:0; font-family: Arial, sans-serif; background:#f4f4f4; overflow-x:hidden; }
 
-/* frases */
-.phrases-container{margin-top:6px}
-.phrase-item{
-  display:grid;
-  grid-template-columns:18px 1fr;
-  column-gap:8px;
-  margin-bottom:10px
-}
-.phrase-en{font-size:12px;font-weight:bold}
-.phrase-pt{font-size:12px;color:#555;margin-top:2px}
+  /* Sidebar */
+  .sidebar { position:fixed; width:240px; height:100vh; background:#2c2c2c; color:#fff; padding:14px 0; overflow-y:auto; }
+  .sidebar h2 { text-align:center; font-size:15px; margin:6px 0 10px; }
+
+  /* New icon categories (top) */
+  .icon-cats { display:flex; gap:10px; justify-content:center; padding:8px 10px 14px; }
+  .icon-btn {
+    width:72px; height:72px;
+    border:none; background:transparent; cursor:pointer;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    border-radius:10px;
+  }
+  .icon-btn:hover { background:#3a3a3a; }
+  .icon-btn img { width:44px; height:44px; display:block; }
+  .icon-btn span { font-size:10px; color:#ddd; margin-top:6px; text-align:center; line-height:1.1; }
+
+  .divider { height:1px; background:#444; margin:6px 14px; }
+
+  /* Old text menu (kept) */
+  .sidebar button.menu {
+    width:100%; background:none; border:none; color:#fff;
+    padding:10px 14px; text-align:left; cursor:pointer; font-size:13px;
+  }
+  .sidebar button.menu:hover { background:#444; }
+
+  /* Layout content */
+  .content { margin-left:240px; padding:15px; }
+
+  .box { background:#fff; padding:14px; border-radius:10px; max-width:760px; }
+  h1 { font-size:17px; margin:0 0 8px 0; }
+
+  label { font-size:12px; font-weight:bold; margin-top:6px; display:block; }
+  input { width:100%; padding:6px; margin-top:3px; font-size:12px; box-sizing:border-box; }
+
+  textarea { width:100%; height:110px; margin-top:8px; padding:6px; font-size:12px; box-sizing:border-box; }
+
+  .buttons { display:flex; gap:6px; margin-top:8px; flex-wrap:wrap; }
+  button { padding:6px 10px; font-size:12px; cursor:pointer; }
+  .copy { background:#ddd; border:none; }
+  .telegram { background:#2aabee; color:#fff; border:none; }
+  .clear { background:#f0f0f0; border:1px solid #ccc; }
+
+  .section { display:none; }
+  .section.active { display:block; }
+
+  /* Secondary menu screen */
+  .sublist { margin-top:10px; display:flex; flex-direction:column; gap:8px; }
+  .subitem {
+    display:flex; align-items:center; gap:10px;
+    padding:10px; border:1px solid #e6e6e6; border-radius:10px;
+    cursor:pointer; background:#fff;
+  }
+  .subitem:hover { background:#fafafa; }
+  .subitem img { width:28px; height:28px; }
+  .subitem .title { font-size:13px; font-weight:bold; }
+  .subitem .desc { font-size:12px; color:#666; margin-top:2px; }
+
+  .chips { display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
+  .chip {
+    border:1px solid #ddd; background:#fff; border-radius:999px;
+    padding:8px 10px; cursor:pointer; font-size:12px;
+  }
+  .chip:hover { background:#f7f7f7; }
+
+  /* Withdraw phrases checkbox area */
+  .phrases-container { margin-top:6px; }
+  .phrase-item {
+    display:grid;
+    grid-template-columns:18px 1fr;
+    column-gap:8px;
+    margin-bottom:10px;
+  }
+  .phrase-item input[type="checkbox"]{
+    margin: 2px 0 0 0;
+    width: 14px; height: 14px;
+  }
+  .phrase-en { font-size:12px; font-weight:bold; line-height:1.2; }
+  .phrase-pt { font-size:12px; color:#555; margin-top:2px; line-height:1.2; }
 </style>
 </head>
 
@@ -42,181 +93,269 @@ button{padding:6px 10px;font-size:12px;cursor:pointer}
 
 <div class="sidebar">
   <h2>Demandas</h2>
-  <button onclick="show('email')">Mudar E-mail</button>
-  <button onclick="show('phone')">Mudar Telefone</button>
-  <button onclick="show('withdrawal')">Comprovante de Saque</button>
-  <button onclick="show('withdraw')">Valor para Saque</button>
-  <button onclick="show('unlock')">Desbloquear Conta</button>
-  <button onclick="show('wager')">Valor no Wager</button>
+
+  <!-- ✅ NEW CATEGORIES (TOP) -->
+  <div class="icon-cats">
+    <button class="icon-btn" onclick="openCategory('BB_com_Consultation_Information')" title="BB.com_Consultation_Information">
+      <img src="https://raw.githubusercontent.com/dertus/demandas/f52a6b2a5834a5d3e175ff2ae37c4783e0872c3b/images/BB.com_Consultation_Information.png" alt="BB.com_Consultation_Information">
+      <span>BB.com</span>
+    </button>
+
+    <button class="icon-btn" onclick="openCategory('Technical_requests_BR')" title="Technical requests BR">
+      <img src="https://raw.githubusercontent.com/dertus/demandas/b6794c60aacf5e1934aa3d099678f4ec9390fff3/images/Technical%20requests%20BR.png" alt="Technical requests BR">
+      <span>Tech</span>
+    </button>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ✅ OLD MENUS (KEPT BELOW) -->
+  <button class="menu" onclick="show('email')">Mudar E-mail</button>
+  <button class="menu" onclick="show('phone')">Mudar Telefone</button>
+  <button class="menu" onclick="show('withdrawal')">Comprovante de Saque</button>
+  <button class="menu" onclick="show('withdraw')">Valor para Saque</button>
+  <button class="menu" onclick="show('unlock')">Desbloquear Conta</button>
+  <button class="menu" onclick="show('wager')">Valor no Wager</button>
 </div>
 
 <div class="content">
 
-<!-- MUDAR EMAIL -->
-<div id="email" class="box section active">
-<h1>Mudar E-mail</h1>
-<label>Email sent from</label><input id="email_from">
-<label>Current e-mail</label><input id="email_current">
-<label>New e-mail</label><input id="email_new">
-<label>Account ID</label><input id="email_id">
+  <!-- ✅ CATEGORY SCREENS (Secondary menus) -->
 
-<div class="buttons">
-<button onclick="genEmail()">Gerar</button>
-<button class="copy" onclick="copyText('out_email')">Copiar</button>
-<button class="telegram" onclick="sendTelegramEmail('out_email')">Telegram</button>
-<button class="clear" onclick="clearSection('email')">Limpar</button>
-</div>
-<textarea id="out_email" readonly></textarea>
-</div>
+  <div id="cat_BB_com_Consultation_Information" class="box section">
+    <h1>BB.com_Consultation_Information</h1>
+    <div class="sublist">
 
-<!-- MUDAR TELEFONE -->
-<div id="phone" class="box section">
-<h1>Mudar Telefone</h1>
-<label>Email sent from</label><input id="phone_email">
-<label>Current phone</label><input id="phone_current">
-<label>New phone</label><input id="phone_new">
-<label>Account ID</label><input id="phone_id">
+      <!-- Item 1 estava vazio: não coloquei. -->
 
-<div class="buttons">
-<button onclick="genPhone()">Gerar</button>
-<button class="copy" onclick="copyText('out_phone')">Copiar</button>
-<button class="telegram" onclick="sendTelegramPhone('out_phone')">Telegram</button>
-<button class="clear" onclick="clearSection('phone')">Limpar</button>
-</div>
-<textarea id="out_phone" readonly></textarea>
-</div>
+      <!-- ✅ Item 2: Second Line -->
+      <div class="subitem" onclick="show('second_line')">
+        <img src="https://raw.githubusercontent.com/dertus/demandas/refs/heads/main/images/Second_Line.svg" alt="Second Line">
+        <div>
+          <div class="title">Second Line</div>
+          <div class="desc">Atalhos para Mudar E-mail e Mudar Telefone</div>
+        </div>
+      </div>
 
-<!-- COMPROVANTE DE SAQUE -->
-<div id="withdrawal" class="box section">
-<h1>Comprovante de Saque</h1>
-
-<label>VIP</label><input id="withdraw_vip">
-<label>Client ID</label><input id="withdraw_client">
-<label>Transaction ID</label><input id="withdraw_trans">
-<label>Transaction Status</label><input id="withdraw_status">
-<label>Method</label><input id="withdraw_method">
-
-<label>Escolha a frase</label>
-<div class="phrases-container">
-  <div class="phrase-item">
-    <input type="checkbox" name="withdraw_phrase" value="Please, share the withdrawal receipt for this transaction." onclick="onlyOne(this)">
-    <div>
-      <div class="phrase-en">Please, share the withdrawal receipt for this transaction.</div>
-      <div class="phrase-pt">Por favor, compartilhe o comprovante de saque desta transação.</div>
     </div>
   </div>
 
-  <div class="phrase-item">
-    <input type="checkbox" name="withdraw_phrase" value="The player claims that the deposit was not credited." onclick="onlyOne(this)">
-    <div>
-      <div class="phrase-en">The player claims that the deposit was not credited.</div>
-      <div class="phrase-pt">O jogador afirma que o depósito não foi creditado.</div>
+  <div id="cat_Technical_requests_BR" class="box section">
+    <h1>Technical requests BR</h1>
+    <div class="sublist">
+      <div class="subitem" onclick="alert('Ainda não há itens nessa categoria. Me mande os itens e ícones que eu adiciono.')">
+        <img src="https://raw.githubusercontent.com/dertus/demandas/b6794c60aacf5e1934aa3d099678f4ec9390fff3/images/Technical%20requests%20BR.png" alt="Tech">
+        <div>
+          <div class="title">Sem itens ainda</div>
+          <div class="desc">Envie os submenus desta categoria para eu incluir</div>
+        </div>
+      </div>
     </div>
   </div>
 
-  <div class="phrase-item">
-    <input type="checkbox" name="withdraw_phrase" value="Rejected deposit, user says the amount did not return to his account" onclick="onlyOne(this)">
-    <div>
-      <div class="phrase-en">Rejected deposit, user says the amount did not return to his account</div>
-      <div class="phrase-pt">Depósito rejeitado, o usuário diz que o valor não retornou à sua conta.</div>
+  <!-- ✅ Second Line screen -->
+  <div id="second_line" class="box section">
+    <h1>Second Line</h1>
+    <div class="chips">
+      <div class="chip" onclick="show('email')">Abrir Mudar E-mail</div>
+      <div class="chip" onclick="show('phone')">Abrir Mudar Telefone</div>
+    </div>
+    <div style="margin-top:12px; font-size:12px; color:#666;">
+      Dica: aqui pode virar uma lista estilo Telegram com mais opções depois.
     </div>
   </div>
-</div>
 
-<div class="buttons">
-<button onclick="genWithdrawal()">Gerar</button>
-<button class="copy" onclick="copyText('out_withdrawal')">Copiar</button>
-<button class="telegram" onclick="sendTelegramDefault('out_withdrawal')">Telegram</button>
-<button class="clear" onclick="clearSection('withdrawal')">Limpar</button>
-</div>
-<textarea id="out_withdrawal" readonly></textarea>
-</div>
+  <!-- ✅ EXISTING FORMS (unchanged features) -->
 
-<!-- VALOR SAQUE -->
-<div id="withdraw" class="box section">
-<h1>Valor para Saque</h1>
-<label>Account ID</label><input id="with_id">
-<div class="buttons">
-<button onclick="genWithdraw()">Gerar</button>
-<button class="copy" onclick="copyText('out_withdraw')">Copiar</button>
-<button class="telegram" onclick="sendTelegramDefault('out_withdraw')">Telegram</button>
-<button class="clear" onclick="clearSection('withdraw')">Limpar</button>
-</div>
-<textarea id="out_withdraw" readonly></textarea>
-</div>
+  <!-- MUDAR E-MAIL -->
+  <div id="email" class="box section active">
+    <h1>Mudar E-mail</h1>
+    <label>Email sent from</label><input id="email_from" required>
+    <label>Current e-mail</label><input id="email_current" required>
+    <label>New e-mail</label><input id="email_new" required>
+    <label>Account ID</label><input id="email_id" required>
 
-<!-- DESBLOQUEAR -->
-<div id="unlock" class="box section">
-<h1>Desbloquear Conta</h1>
-<label>Account ID</label><input id="unlock_id">
-<div class="buttons">
-<button onclick="genUnlock()">Gerar</button>
-<button class="copy" onclick="copyText('out_unlock')">Copiar</button>
-<button class="telegram" onclick="sendTelegramDefault('out_unlock')">Telegram</button>
-<button class="clear" onclick="clearSection('unlock')">Limpar</button>
-</div>
-<textarea id="out_unlock" readonly></textarea>
-</div>
+    <div class="buttons">
+      <button onclick="genEmail()">Gerar</button>
+      <button class="copy" onclick="copyText('out_email')">Copiar</button>
+      <button class="telegram" onclick="sendTelegramEmail('out_email')">Telegram</button>
+      <button class="clear" onclick="clearSection('email')">Limpar</button>
+    </div>
+    <textarea id="out_email" readonly></textarea>
+  </div>
 
-<!-- WAGER -->
-<div id="wager" class="box section">
-<h1>Valor no Wager</h1>
-<label>Account ID</label><input id="wager_id">
-<div class="buttons">
-<button onclick="genWager()">Gerar</button>
-<button class="copy" onclick="copyText('out_wager')">Copiar</button>
-<button class="telegram" onclick="sendTelegramDefault('out_wager')">Telegram</button>
-<button class="clear" onclick="clearSection('wager')">Limpar</button>
-</div>
-<textarea id="out_wager" readonly></textarea>
-</div>
+  <!-- MUDAR TELEFONE -->
+  <div id="phone" class="box section">
+    <h1>Mudar Telefone</h1>
+    <label>Email sent from</label><input id="phone_email" required>
+    <label>Current phone</label><input id="phone_current" required>
+    <label>New phone</label><input id="phone_new" required>
+    <label>Account ID</label><input id="phone_id" required>
+
+    <div class="buttons">
+      <button onclick="genPhone()">Gerar</button>
+      <button class="copy" onclick="copyText('out_phone')">Copiar</button>
+      <button class="telegram" onclick="sendTelegramPhone('out_phone')">Telegram</button>
+      <button class="clear" onclick="clearSection('phone')">Limpar</button>
+    </div>
+    <textarea id="out_phone" readonly></textarea>
+  </div>
+
+  <!-- COMPROVANTE DE SAQUE -->
+  <div id="withdrawal" class="box section">
+    <h1>Comprovante de Saque</h1>
+
+    <label>VIP</label><input id="withdraw_vip" required>
+    <label>Client ID</label><input id="withdraw_client" required>
+    <label>Transaction ID</label><input id="withdraw_trans" required>
+    <label>Transaction Status</label><input id="withdraw_status" required>
+    <label>Method</label><input id="withdraw_method" required>
+
+    <label>Escolha a frase</label>
+    <div class="phrases-container">
+      <div class="phrase-item">
+        <input type="checkbox" name="withdraw_phrase"
+          value="Please, share the withdrawal receipt for this transaction."
+          onclick="onlyOne(this)">
+        <div>
+          <div class="phrase-en">Please, share the withdrawal receipt for this transaction.</div>
+          <div class="phrase-pt">Por favor, compartilhe o comprovante de saque desta transação.</div>
+        </div>
+      </div>
+
+      <div class="phrase-item">
+        <input type="checkbox" name="withdraw_phrase"
+          value="The player claims that the deposit was not credited."
+          onclick="onlyOne(this)">
+        <div>
+          <div class="phrase-en">The player claims that the deposit was not credited.</div>
+          <div class="phrase-pt">O jogador afirma que o depósito não foi creditado.</div>
+        </div>
+      </div>
+
+      <div class="phrase-item">
+        <input type="checkbox" name="withdraw_phrase"
+          value="Rejected deposit, user says the amount did not return to his account"
+          onclick="onlyOne(this)">
+        <div>
+          <div class="phrase-en">Rejected deposit, user says the amount did not return to his account</div>
+          <div class="phrase-pt">Depósito rejeitado, o usuário diz que o valor não retornou à sua conta.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="buttons">
+      <button onclick="genWithdrawal()">Gerar</button>
+      <button class="copy" onclick="copyText('out_withdrawal')">Copiar</button>
+      <button class="telegram" onclick="sendTelegramDefault('out_withdrawal')">Telegram</button>
+      <button class="clear" onclick="clearSection('withdrawal')">Limpar</button>
+    </div>
+
+    <textarea id="out_withdrawal" readonly></textarea>
+  </div>
+
+  <!-- VALOR PARA SAQUE -->
+  <div id="withdraw" class="box section">
+    <h1>Valor para Saque</h1>
+    <label>Account ID</label><input id="with_id" required>
+
+    <div class="buttons">
+      <button onclick="genWithdraw()">Gerar</button>
+      <button class="copy" onclick="copyText('out_withdraw')">Copiar</button>
+      <button class="telegram" onclick="sendTelegramDefault('out_withdraw')">Telegram</button>
+      <button class="clear" onclick="clearSection('withdraw')">Limpar</button>
+    </div>
+    <textarea id="out_withdraw" readonly></textarea>
+  </div>
+
+  <!-- DESBLOQUEAR -->
+  <div id="unlock" class="box section">
+    <h1>Desbloquear Conta</h1>
+    <label>Account ID</label><input id="unlock_id" required>
+
+    <div class="buttons">
+      <button onclick="genUnlock()">Gerar</button>
+      <button class="copy" onclick="copyText('out_unlock')">Copiar</button>
+      <button class="telegram" onclick="sendTelegramDefault('out_unlock')">Telegram</button>
+      <button class="clear" onclick="clearSection('unlock')">Limpar</button>
+    </div>
+    <textarea id="out_unlock" readonly></textarea>
+  </div>
+
+  <!-- WAGER -->
+  <div id="wager" class="box section">
+    <h1>Valor no Wager</h1>
+    <label>Account ID</label><input id="wager_id" required>
+
+    <div class="buttons">
+      <button onclick="genWager()">Gerar</button>
+      <button class="copy" onclick="copyText('out_wager')">Copiar</button>
+      <button class="telegram" onclick="sendTelegramDefault('out_wager')">Telegram</button>
+      <button class="clear" onclick="clearSection('wager')">Limpar</button>
+    </div>
+    <textarea id="out_wager" readonly></textarea>
+  </div>
 
 </div>
 
 <script>
-function show(id){
-  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-}
+  function show(id){
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    const el = document.getElementById(id);
+    if (el) el.classList.add('active');
+  }
 
-function copyText(id){
-  const t=document.getElementById(id);
-  if(!t.value){alert("Gere o texto primeiro.");return;}
-  navigator.clipboard.writeText(t.value);
-}
+  function openCategory(catId){
+    // mostra a "tela" de categoria
+    show('cat_' + catId);
+  }
 
-/* TELEGRAM LINKS */
-function sendTelegramEmail(id){
-  copyText(id);
-  window.open("https://t.me/c/2262447946/4","_blank");
-}
-function sendTelegramPhone(id){
-  copyText(id);
-  window.open("https://t.me/c/2262447946/4","_blank");
-}
-function sendTelegramDefault(id){
-  copyText(id);
-  window.open("https://t.me/+9mCTJhflLbo1YWZh","_blank");
-}
+  function copyText(id){
+    const t = document.getElementById(id);
+    if(!t.value){ alert("Gere o texto primeiro."); return; }
+    navigator.clipboard.writeText(t.value);
+  }
 
-function clearSection(id){
-  const sec=document.getElementById(id);
-  sec.querySelectorAll("input").forEach(i=>{
-    if(i.type==="checkbox") i.checked=false;
-    else i.value="";
-  });
-  sec.querySelectorAll("textarea").forEach(t=>t.value="");
-}
+  // TELEGRAM LINKS
+  function sendTelegramEmail(id){
+    copyText(id);
+    window.open("https://t.me/c/2262447946/4", "_blank");
+  }
+  function sendTelegramPhone(id){
+    copyText(id);
+    window.open("https://t.me/c/2262447946/4", "_blank");
+  }
+  function sendTelegramDefault(id){
+    copyText(id);
+    window.open("https://t.me/+9mCTJhflLbo1YWZh", "_blank");
+  }
 
-function onlyOne(cb){
-  document.getElementsByName("withdraw_phrase").forEach(x=>{
-    if(x!==cb) x.checked=false;
-  });
-}
+  function clearSection(sectionId){
+    const section = document.getElementById(sectionId);
+    if(!section) return;
 
-/* GERADORES */
-function genEmail(){
-out_email.value=`Customer wishes to change their e-mail.
+    section.querySelectorAll('input').forEach(el => {
+      if(el.type === 'checkbox') el.checked = false;
+      else el.value = '';
+    });
+
+    section.querySelectorAll('textarea').forEach(t => t.value = '');
+  }
+
+  // ✅ Only one checkbox
+  function onlyOne(checkbox){
+    const list = document.getElementsByName('withdraw_phrase');
+    list.forEach(item => { if(item !== checkbox) item.checked = false; });
+  }
+
+  // Generators
+  function genEmail(){
+    if(!email_from.value.trim() || !email_current.value.trim() || !email_new.value.trim() || !email_id.value.trim()){
+      alert("Preencha todos os campos.");
+      return;
+    }
+    out_email.value =
+`Customer wishes to change their e-mail.
 
 Email sent from - ${email_from.value}
 
@@ -225,9 +364,15 @@ Current e-mail - ${email_current.value}
 New e-mail - ${email_new.value}
 
 Account ID - ${email_id.value}`;
-}
-function genPhone(){
-out_phone.value=`Customer wishes to change their phone number.
+  }
+
+  function genPhone(){
+    if(!phone_email.value.trim() || !phone_current.value.trim() || !phone_new.value.trim() || !phone_id.value.trim()){
+      alert("Preencha todos os campos.");
+      return;
+    }
+    out_phone.value =
+`Customer wishes to change their phone number.
 
 Email sent from - ${phone_email.value}
 
@@ -236,35 +381,65 @@ Current phone - ${phone_current.value}
 New phone - ${phone_new.value}
 
 Account ID - ${phone_id.value}`;
-}
-function genWithdrawal(){
-const p=document.querySelector('input[name="withdraw_phrase"]:checked');
-if(!p){alert("Escolha uma frase.");return;}
-out_withdrawal.value=`VIP: ${withdraw_vip.value}
-Client ID: ${withdraw_client.value}
-Transaction ID: ${withdraw_trans.value}
-Transaction Status: ${withdraw_status.value}
-Method: ${withdraw_method.value}
+  }
+
+  function genWithdrawal(){
+    const vip = withdraw_vip.value.trim();
+    const client = withdraw_client.value.trim();
+    const trans = withdraw_trans.value.trim();
+    const status = withdraw_status.value.trim();
+    const method = withdraw_method.value.trim();
+    const phraseEl = document.querySelector('input[name="withdraw_phrase"]:checked');
+
+    if(!vip || !client || !trans || !status || !method || !phraseEl){
+      alert("Preencha todos os campos e escolha uma frase.");
+      return;
+    }
+
+    out_withdrawal.value =
+`VIP: ${vip}
+Client ID: ${client}
+Transaction ID: ${trans}
+Transaction Status: ${status}
+Method: ${method}
 Country: Brazil
 Currency: BRL
 
-${p.value}`;
-}
-function genWithdraw(){
-out_withdraw.value=`Customer requests withdrawal amount.
+${phraseEl.value}`;
+  }
+
+  function genWithdraw(){
+    if(!with_id.value.trim()){
+      alert("Preencha todos os campos.");
+      return;
+    }
+    out_withdraw.value =
+`Customer requests withdrawal amount.
 
 Account ID - ${with_id.value}`;
-}
-function genUnlock(){
-out_unlock.value=`Customer requests account unlock.
+  }
+
+  function genUnlock(){
+    if(!unlock_id.value.trim()){
+      alert("Preencha todos os campos.");
+      return;
+    }
+    out_unlock.value =
+`Customer requests account unlock.
 
 Account ID - ${unlock_id.value}`;
-}
-function genWager(){
-out_wager.value=`Customer requests wager amount.
+  }
+
+  function genWager(){
+    if(!wager_id.value.trim()){
+      alert("Preencha todos os campos.");
+      return;
+    }
+    out_wager.value =
+`Customer requests wager amount.
 
 Account ID - ${wager_id.value}`;
-}
+  }
 </script>
 
 </body>
