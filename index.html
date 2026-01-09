@@ -2,6 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
+<title>Demandas</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
@@ -9,7 +10,6 @@
 
   .nav { position: fixed; left: 0; top: 0; height: 100vh; display: flex; z-index: 5; }
   .col { width: 260px; height: 100vh; background: #2c2c2c; color: #fff; overflow-y: auto; padding: 12px 0; }
-  .col h2 { margin: 6px 0 12px; text-align:center; font-size: 15px; }
   .divider { height:1px; background:#444; margin:10px 14px; }
 
   .nav-item {
@@ -62,6 +62,10 @@
 
 <body>
 
+<div class="nav">
+  <!-- Column 1 (NO TITLE NOW) -->
+  <div class="col col1">
+
     <!-- MAIN CATEGORIES -->
     <button class="nav-item" onclick="openCategory('BB_com_Consultation_Information')">
       <img src="https://raw.githubusercontent.com/dertus/demandas/f52a6b2a5834a5d3e175ff2ae37c4783e0872c3b/images/BB.com_Consultation_Information.png" alt="">
@@ -107,6 +111,7 @@
     </button>
   </div>
 
+  <!-- Column 2 -->
   <div class="col col2" id="col2">
     <div id="sec_BB_com_Consultation_Information" style="display:none;">
       <button class="nav-item" onclick="show('second_line')">
@@ -210,7 +215,6 @@
   <div id="withdraw" class="box section">
     <h1>Valor para Saque</h1>
     <label>Account ID</label><input id="with_id" required>
-
     <div class="buttons">
       <button onclick="genWithdraw()">Gerar</button>
       <button class="copy" onclick="copyText('out_withdraw')">Copiar</button>
@@ -223,7 +227,6 @@
   <div id="unlock" class="box section">
     <h1>Desbloquear Conta</h1>
     <label>Account ID</label><input id="unlock_id" required>
-
     <div class="buttons">
       <button onclick="genUnlock()">Gerar</button>
       <button class="copy" onclick="copyText('out_unlock')">Copiar</button>
@@ -236,7 +239,6 @@
   <div id="wager" class="box section">
     <h1>Valor no Wager</h1>
     <label>Account ID</label><input id="wager_id" required>
-
     <div class="buttons">
       <button onclick="genWager()">Gerar</button>
       <button class="copy" onclick="copyText('out_wager')">Copiar</button>
@@ -250,15 +252,10 @@
 
 <script>
   function closeAllSections(){
-    // find currently open section (active)
     const active = document.querySelector('.section.active');
     if(active){
-      // clear it before closing
-      const id = active.id;
-      clearSection(id);
-      active.classList.remove('active');
+      clearSection(active.id);
     }
-    // also ensure none active
     document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   }
 
@@ -269,10 +266,8 @@
   }
 
   function openCategory(catId){
-    // close/clear any open demand
     closeAllSections();
 
-    // show column 2 and its items
     const col2 = document.getElementById('col2');
     col2.classList.add('active');
 
