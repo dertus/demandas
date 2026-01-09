@@ -21,42 +21,33 @@
 
   textarea { width:100%; height:110px; margin-top:8px; padding:6px; font-size:12px; box-sizing:border-box; }
 
-  .buttons { display:flex; gap:6px; margin-top:8px; }
+  .buttons { display:flex; gap:6px; margin-top:8px; flex-wrap:wrap; }
   button { padding:6px 10px; font-size:12px; cursor:pointer; }
+
   .copy { background:#ddd; border:none; }
   .telegram { background:#2aabee; color:#fff; border:none; }
+  .clear { background:#f0f0f0; border:1px solid #ccc; }
 
   .section { display:none; }
   .section.active { display:block; }
 
-  /* ✅ FRASES (arrumado) */
-  .phrases-container {
-    margin-top: 6px;
-  }
+  /* FRASES (checkbox) */
+  .phrases-container { margin-top: 6px; }
   .phrase-item {
     display: grid;
-    grid-template-columns: 18px 1fr; /* checkbox + texto */
+    grid-template-columns: 18px 1fr;
     column-gap: 8px;
     row-gap: 2px;
     align-items: start;
     margin-bottom: 10px;
   }
   .phrase-item input[type="checkbox"]{
-    margin: 2px 0 0 0; /* alinha com a primeira linha do texto */
+    margin: 2px 0 0 0;
     width: 14px;
     height: 14px;
   }
-  .phrase-en {
-    font-size: 12px;
-    font-weight: bold;
-    line-height: 1.2;
-  }
-  .phrase-pt {
-    font-size: 12px;
-    color: #555;
-    line-height: 1.2;
-    margin-top: 2px;
-  }
+  .phrase-en { font-size: 12px; font-weight: bold; line-height: 1.2; }
+  .phrase-pt { font-size: 12px; color: #555; line-height: 1.2; margin-top: 2px; }
 </style>
 </head>
 
@@ -86,6 +77,7 @@
       <button onclick="genEmail()">Gerar</button>
       <button class="copy" onclick="copyText('out_email')">Copiar</button>
       <button class="telegram" onclick="sendTelegram('out_email')">Telegram</button>
+      <button class="clear" onclick="clearSection('email')">Limpar</button>
     </div>
     <textarea id="out_email" readonly></textarea>
   </div>
@@ -102,6 +94,7 @@
       <button onclick="genPhone()">Gerar</button>
       <button class="copy" onclick="copyText('out_phone')">Copiar</button>
       <button class="telegram" onclick="sendTelegram('out_phone')">Telegram</button>
+      <button class="clear" onclick="clearSection('phone')">Limpar</button>
     </div>
     <textarea id="out_phone" readonly></textarea>
   </div>
@@ -153,6 +146,7 @@
       <button onclick="genWithdrawal()">Gerar</button>
       <button class="copy" onclick="copyText('out_withdrawal')">Copiar</button>
       <button class="telegram" onclick="sendTelegram('out_withdrawal')">Telegram</button>
+      <button class="clear" onclick="clearSection('withdrawal')">Limpar</button>
     </div>
 
     <textarea id="out_withdrawal" readonly></textarea>
@@ -167,6 +161,7 @@
       <button onclick="genWithdraw()">Gerar</button>
       <button class="copy" onclick="copyText('out_withdraw')">Copiar</button>
       <button class="telegram" onclick="sendTelegram('out_withdraw')">Telegram</button>
+      <button class="clear" onclick="clearSection('withdraw')">Limpar</button>
     </div>
     <textarea id="out_withdraw" readonly></textarea>
   </div>
@@ -180,6 +175,7 @@
       <button onclick="genUnlock()">Gerar</button>
       <button class="copy" onclick="copyText('out_unlock')">Copiar</button>
       <button class="telegram" onclick="sendTelegram('out_unlock')">Telegram</button>
+      <button class="clear" onclick="clearSection('unlock')">Limpar</button>
     </div>
     <textarea id="out_unlock" readonly></textarea>
   </div>
@@ -193,6 +189,7 @@
       <button onclick="genWager()">Gerar</button>
       <button class="copy" onclick="copyText('out_wager')">Copiar</button>
       <button class="telegram" onclick="sendTelegram('out_wager')">Telegram</button>
+      <button class="clear" onclick="clearSection('wager')">Limpar</button>
     </div>
     <textarea id="out_wager" readonly></textarea>
   </div>
@@ -230,6 +227,21 @@
   function onlyOne(checkbox){
     const list = document.getElementsByName('withdraw_phrase');
     list.forEach(item => { if(item !== checkbox) item.checked = false; });
+  }
+
+  // ✅ Limpar por seção
+  function clearSection(sectionId){
+    const section = document.getElementById(sectionId);
+    if(!section) return;
+
+    // limpa inputs
+    section.querySelectorAll('input').forEach(el => {
+      if(el.type === 'checkbox') el.checked = false;
+      else el.value = '';
+    });
+
+    // limpa textarea(s)
+    section.querySelectorAll('textarea').forEach(t => t.value = '');
   }
 
   function genEmail(){
