@@ -1,0 +1,17 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Círculo preto -->
+  <circle cx="100" cy="100" r="100" fill="#000000"></circle>
+
+  <!-- Grupo de texto centralizado opticamente -->
+  <g text-anchor="middle">
+    <!-- BetBoom -->
+    <text x="100" y="98" font-family="Arial, Helvetica, sans-serif" font-size="42" font-weight="700">
+      <tspan fill="#E31E24">Bet</tspan><tspan fill="#FFD400">Boom</tspan>
+    </text>
+
+    <!-- REQUESTS (menor e mais próximo) -->
+    <text x="100" y="124" font-family="Arial, Helvetica, sans-serif" font-size="26" font-weight="700">
+      <tspan fill="#FFD400">REQUEST</tspan><tspan fill="#E31E24">S</tspan>
+    </text>
+  </g>
+</svg>
