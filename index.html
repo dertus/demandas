@@ -1,591 +1,197 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-<meta charset="UTF-8">
-<title>Demandas</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- =========================
+     MENU (APENAS DESKTOP — 2 COLUNAS FIXAS)
+     (APENAS MENU: HTML + CSS + JS)
+========================= -->
 
-<style>
-  body { margin:0; font-family: Arial, sans-serif; background:#f4f4f4; overflow-x:hidden; }
-
-  /* Topbar (mobile) */
-  .topbar{
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    height: 52px;
-    background: #2c2c2c;
-    color: #fff;
-    display: none;
-    align-items: center;
-    padding: 0 12px;
-    z-index: 20;
-    gap: 10px;
-  }
-  .topbar .menuBtn{
-    border: none;
-    background: transparent;
-    color: #fff;
-    font-size: 22px;
-    cursor: pointer;
-    padding: 6px 8px;
-    border-radius: 8px;
-  }
-  .topbar .menuBtn:hover{ background:#444; }
-  .topbar .title{ font-size: 14px; font-weight: 700; opacity: .95; }
-
-  /* NAV (desktop default: fixed 2 columns) */
-  .nav { position: fixed; left: 0; top: 0; height: 100vh; display: flex; z-index: 5; }
-  .col { width: 260px; height: 100vh; background: #2c2c2c; color: #fff; overflow-y: auto; padding: 12px 0; }
-  .divider { height:1px; background:#444; margin:10px 14px; }
-
-  .nav-item {
-    width: 100%;
-    border: none;
-    background: transparent;
-    color: #fff;
-    cursor: pointer;
-    padding: 10px 14px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    text-align: left;
-  }
-  .nav-item:hover { background:#444; }
-  .nav-item img { width: 30px; height: 30px; border-radius: 6px; }
-  .nav-item .title { font-size: 13px; font-weight: 700; }
-
-  .col2 { display:none; }
-  .col2.active { display:block; }
-
-  /* Content */
-  .content { margin-left: 520px; padding: 15px; }
-  .box { background:#fff; padding:14px; border-radius:10px; max-width:760px; }
-  h1 { font-size:17px; margin:0 0 8px 0; }
-
-  label { font-size:12px; font-weight:bold; margin-top:6px; display:block; }
-  input { width:100%; padding:6px; margin-top:3px; font-size:12px; box-sizing:border-box; }
-  textarea { width:100%; height:110px; margin-top:8px; padding:6px; font-size:12px; box-sizing:border-box; }
-
-  .buttons { display:flex; gap:6px; margin-top:8px; flex-wrap:wrap; }
-  button { padding:6px 10px; font-size:12px; cursor:pointer; }
-  .copy { background:#ddd; border:none; }
-  .telegram { background:#2aabee; color:#fff; border:none; }
-  .clear { background:#f0f0f0; border:1px solid #ccc; }
-
-  .section { display:none; }
-  .section.active { display:block; }
-
-  .chips { display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; }
-  .chip { border:1px solid #ddd; background:#fff; border-radius:999px; padding:8px 10px; cursor:pointer; font-size:12px; }
-  .chip:hover { background:#f7f7f7; }
-
-  .phrases-container { margin-top:6px; }
-  .phrase-item { display:grid; grid-template-columns:18px 1fr; column-gap:8px; margin-bottom:10px; }
-  .phrase-item input[type="checkbox"]{ margin:2px 0 0 0; width:14px; height:14px; }
-  .phrase-en { font-size:12px; font-weight:bold; line-height:1.2; }
-  .phrase-pt { font-size:12px; color:#555; margin-top:2px; line-height:1.2; }
-
-  /* ===== MOBILE ===== */
-  .overlay{
-    position: fixed; inset: 0;
-    background: rgba(0,0,0,.45);
-    display: none;
-    z-index: 19;
-  }
-
-  .drawer{
-    position: fixed;
-    top: 0; left: 0;
-    height: 100vh;
-    width: min(92vw, 340px);
-    background: #2c2c2c;
-    transform: translateX(-105%);
-    transition: transform .25s ease;
-    z-index: 21;
-    overflow-y: auto;
-    padding: 10px 0;
-  }
-  .drawer.open{ transform: translateX(0); }
-  .drawerHeader{
-    display:flex;
-    align-items:center;
-    gap:8px;
-    padding: 6px 12px 10px;
-    color:#fff;
-    font-weight:700;
-    font-size: 14px;
-  }
-  .backBtn{
-    border:none;
-    background: transparent;
-    color:#fff;
-    cursor:pointer;
-    font-size: 18px;
-    padding: 6px 8px;
-    border-radius: 8px;
-    display:none;
-  }
-  .backBtn:hover{ background:#444; }
-
-  /* On mobile, nav is hidden and replaced with drawer */
-  @media (max-width: 900px){
-    .topbar{ display:flex; }
-    .nav{ display:none; }
-    .content{ margin-left: 0; padding: 70px 12px 14px; }
-    .box{ max-width: 100%; }
-    .overlay.show{ display:block; }
-  }
-</style>
-</head>
-
-<body>
-
-<!-- MOBILE TOPBAR -->
-<div class="topbar">
-  <button class="menuBtn" onclick="openDrawer()">☰</button>
-  <div class="title">Demandas</div>
-</div>
-
-<!-- MOBILE OVERLAY + DRAWER -->
-<div class="overlay" id="overlay" onclick="closeDrawer()"></div>
-
-<div class="drawer" id="drawer">
-  <div class="drawerHeader">
-    <button class="backBtn" id="backBtn" onclick="drawerBack()">←</button>
-    <div id="drawerTitle">Menu</div>
-  </div>
-
-  <!-- Drawer MAIN (equiv col1) -->
-  <div id="drawerMain">
-    <!-- MAIN CATEGORIES -->
-    <button class="nav-item" onclick="openCategory('BB_com_Consultation_Information', true)">
-      <img src="https://raw.githubusercontent.com/dertus/demandas/f52a6b2a5834a5d3e175ff2ae37c4783e0872c3b/images/BB.com_Consultation_Information.png" alt="">
-      <div class="title">BB.com_Consultation_Information</div>
-    </button>
-
-    <button class="nav-item" onclick="openCategory('Technical_requests_BR', true)">
-      <img src="https://raw.githubusercontent.com/dertus/demandas/b6794c60aacf5e1934aa3d099678f4ec9390fff3/images/Technical%20requests%20BR.png" alt="">
-      <div class="title">Technical requests BR</div>
-    </button>
-
-    <div class="divider"></div>
-
-    <!-- OLD MENUS -->
-    <button class="nav-item" onclick="show('email'); closeDrawer();">
-      <img src="https://raw.githubusercontent.com/dertus/demandas/refs/heads/main/images/Second_Line.svg" alt="">
-      <div class="title">Mudar E-mail</div>
-    </button>
-
-    <button class="nav-item" onclick="show('phone'); closeDrawer();">
-      <img src="https://raw.githubusercontent.com/dertus/demandas/refs/heads/main/images/Second_Line.svg" alt="">
-      <div class="title">Mudar Telefone</div>
-    </button>
-
-    <button class="nav-item" onclick="show('withdrawal'); closeDrawer();">
-      <img src="https://raw.githubusercontent.com/dertus/demandas/b6794c60aacf5e1934aa3d099678f4ec9390fff3/images/Technical%20requests%20BR.png" alt="">
-      <div class="title">Comprovante de Saque</div>
-    </button>
-
-    <button class="nav-item" onclick="show('withdraw'); closeDrawer();">
-      <img src="https://raw.githubusercontent.com/dertus/demandas/b6794c60aacf5e1934aa3d099678f4ec9390fff3/images/Technical%20requests%20BR.png" alt="">
-      <div class="title">Valor para Saque</div>
-    </button>
-
-    <button class="nav-item" onclick="show('unlock'); closeDrawer();">
-      <img src="https://raw.githubusercontent.com/dertus/demandas/b6794c60aacf5e1934aa3d099678f4ec9390fff3/images/Technical%20requests%20BR.png" alt="">
-      <div class="title">Desbloquear Conta</div>
-    </button>
-
-    <button class="nav-item" onclick="show('wager'); closeDrawer();">
-      <img src="https://raw.githubusercontent.com/dertus/demandas/b6794c60aacf5e1934aa3d099678f4ec9390fff3/images/Technical%20requests%20BR.png" alt="">
-      <div class="title">Valor no Wager</div>
-    </button>
-  </div>
-
-  <!-- Drawer SECONDARY (equiv col2) -->
-  <div id="drawerSecondary" style="display:none;">
-    <div id="sec_BB_com_Consultation_Information_m">
-      <button class="nav-item" onclick="show('second_line'); closeDrawer();">
-        <img src="https://raw.githubusercontent.com/dertus/demandas/refs/heads/main/images/Second_Line.svg" alt="">
-        <div class="title">Second Line</div>
-      </button>
-    </div>
-
-    <div id="sec_Technical_requests_BR_m">
-      <!-- sem itens por enquanto -->
-      <div style="padding: 10px 14px; color:#bbb; font-size:12px;">
-        Sem itens ainda.
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- DESKTOP NAV -->
+<!-- Desktop nav (2 colunas fixas) -->
 <div class="nav">
+  <!-- Coluna 1 -->
   <div class="col col1">
-    <button class="nav-item" onclick="openCategory('BB_com_Consultation_Information')">
+    <!-- CATEGORIAS -->
+    <button class="nav-item" data-nav="cat:BB" type="button" onclick="Menu.openCategory('BB_com_Consultation_Information')">
       <img src="https://raw.githubusercontent.com/dertus/demandas/f52a6b2a5834a5d3e175ff2ae37c4783e0872c3b/images/BB.com_Consultation_Information.png" alt="">
       <div class="title">BB.com_Consultation_Information</div>
     </button>
 
-    <button class="nav-item" onclick="openCategory('Technical_requests_BR')">
+    <button class="nav-item" data-nav="cat:TECH" type="button" onclick="Menu.openCategory('Technical_requests_BR')">
       <img src="https://raw.githubusercontent.com/dertus/demandas/b6794c60aacf5e1934aa3d099678f4ec9390fff3/images/Technical%20requests%20BR.png" alt="">
       <div class="title">Technical requests BR</div>
     </button>
 
     <div class="divider"></div>
 
-    <button class="nav-item" onclick="show('email')">
+    <!-- ATALHOS (itens que abrem seção direto) -->
+    <button class="nav-item" data-nav="form:email" type="button" onclick="Menu.openForm('email')">
       <img src="https://raw.githubusercontent.com/dertus/demandas/refs/heads/main/images/Second_Line.svg" alt="">
       <div class="title">Mudar E-mail</div>
     </button>
 
-    <button class="nav-item" onclick="show('phone')">
+    <button class="nav-item" data-nav="form:phone" type="button" onclick="Menu.openForm('phone')">
       <img src="https://raw.githubusercontent.com/dertus/demandas/refs/heads/main/images/Second_Line.svg" alt="">
       <div class="title">Mudar Telefone</div>
     </button>
 
-    <button class="nav-item" onclick="show('withdrawal')">
+    <button class="nav-item" data-nav="form:withdrawal" type="button" onclick="Menu.openForm('withdrawal')">
       <img src="https://raw.githubusercontent.com/dertus/demandas/b6794c60aacf5e1934aa3d099678f4ec9390fff3/images/Technical%20requests%20BR.png" alt="">
       <div class="title">Comprovante de Saque</div>
     </button>
 
-    <button class="nav-item" onclick="show('withdraw')">
+    <button class="nav-item" data-nav="form:withdraw" type="button" onclick="Menu.openForm('withdraw')">
       <img src="https://raw.githubusercontent.com/dertus/demandas/b6794c60aacf5e1934aa3d099678f4ec9390fff3/images/Technical%20requests%20BR.png" alt="">
       <div class="title">Valor para Saque</div>
     </button>
 
-    <button class="nav-item" onclick="show('unlock')">
+    <button class="nav-item" data-nav="form:unlock" type="button" onclick="Menu.openForm('unlock')">
       <img src="https://raw.githubusercontent.com/dertus/demandas/b6794c60aacf5e1934aa3d099678f4ec9390fff3/images/Technical%20requests%20BR.png" alt="">
       <div class="title">Desbloquear Conta</div>
     </button>
 
-    <button class="nav-item" onclick="show('wager')">
+    <button class="nav-item" data-nav="form:wager" type="button" onclick="Menu.openForm('wager')">
       <img src="https://raw.githubusercontent.com/dertus/demandas/b6794c60aacf5e1934aa3d099678f4ec9390fff3/images/Technical%20requests%20BR.png" alt="">
       <div class="title">Valor no Wager</div>
     </button>
   </div>
 
+  <!-- Coluna 2 (submenus) -->
   <div class="col col2" id="col2">
+    <div class="col2Pad"></div>
+
     <div id="sec_BB_com_Consultation_Information" style="display:none;">
-      <button class="nav-item" onclick="show('second_line')">
+      <button class="nav-item" data-nav="sub:second_line" type="button" onclick="Menu.openSub('second_line', 'BB_com_Consultation_Information')">
         <img src="https://raw.githubusercontent.com/dertus/demandas/refs/heads/main/images/Second_Line.svg" alt="">
         <div class="title">Second Line</div>
       </button>
     </div>
 
     <div id="sec_Technical_requests_BR" style="display:none;">
-      <!-- sem itens por enquanto -->
+      <!-- sem itens -->
     </div>
   </div>
 </div>
 
-<!-- CONTENT -->
-<div class="content">
 
-  <div id="second_line" class="box section">
-    <h1>Second Line</h1>
-    <div class="chips">
-      <div class="chip" onclick="show('email')">Mudar E-mail</div>
-      <div class="chip" onclick="show('phone')">Mudar Telefone</div>
-    </div>
-  </div>
+<!-- =========================
+     CSS DO MENU (apenas)
+========================= -->
+<style>
+  :root{
+    --m-bg:#2c2c2c;           /* mesma cor nas 2 colunas */
+    --m-hover:#444;
+    --m-active:#3d3d3d;
+    --m-accent:#2aabee;
+    --m-divider:#444;
+    --m-text:#fff;
+  }
 
-  <div id="email" class="box section">
-    <h1>Mudar E-mail</h1>
-    <label>Email sent from</label><input id="email_from" required>
-    <label>Current e-mail</label><input id="email_current" required>
-    <label>New e-mail</label><input id="email_new" required>
-    <label>Account ID</label><input id="email_id" required>
+  /* Desktop nav (2 colunas fixas) */
+  .nav{ position:fixed; left:0; top:0; height:100vh; display:flex; z-index:5; }
+  .col{
+    width:260px; height:100vh; background:var(--m-bg); color:var(--m-text);
+    overflow-y:auto; padding:12px 0;
+  }
+  .col1{ border-right:1px solid rgba(255,255,255,.06); }
 
-    <div class="buttons">
-      <button onclick="genEmail()">Gerar</button>
-      <button class="copy" onclick="copyText('out_email')">Copiar</button>
-      <button class="telegram" onclick="sendTelegramEmail('out_email')">Telegram</button>
-      <button class="clear" onclick="clearSection('email')">Limpar</button>
-    </div>
-    <textarea id="out_email" readonly></textarea>
-  </div>
+  .divider{ height:1px; background:var(--m-divider); margin:10px 14px; }
+  .col2Pad{ height:8px; }
 
-  <div id="phone" class="box section">
-    <h1>Mudar Telefone</h1>
-    <label>Email sent from</label><input id="phone_email" required>
-    <label>Current phone</label><input id="phone_current" required>
-    <label>New phone</label><input id="phone_new" required>
-    <label>Account ID</label><input id="phone_id" required>
+  /* Itens: ícone à esquerda e nome completo à direita (um abaixo do outro) */
+  .nav-item{
+    width:100%; border:none; background:transparent; color:var(--m-text);
+    cursor:pointer; padding:10px 14px;
+    display:flex; align-items:center; gap:10px; text-align:left;
+  }
+  .nav-item:hover{ background:var(--m-hover); }
+  .nav-item img{ width:30px; height:30px; border-radius:8px; flex:0 0 auto; }
+  .nav-item .title{ font-size:13px; font-weight:800; line-height:1.15; }
 
-    <div class="buttons">
-      <button onclick="genPhone()">Gerar</button>
-      <button class="copy" onclick="copyText('out_phone')">Copiar</button>
-      <button class="telegram" onclick="sendTelegramPhone('out_phone')">Telegram</button>
-      <button class="clear" onclick="clearSection('phone')">Limpar</button>
-    </div>
-    <textarea id="out_phone" readonly></textarea>
-  </div>
+  /* Ativo (categoria e subitem) */
+  .nav-item.active{
+    background:var(--m-active);
+    box-shadow: inset 3px 0 0 var(--m-accent);
+  }
+</style>
 
-  <div id="withdrawal" class="box section">
-    <h1>Comprovante de Saque</h1>
-    <label>VIP</label><input id="withdraw_vip" required>
-    <label>Client ID</label><input id="withdraw_client" required>
-    <label>Transaction ID</label><input id="withdraw_trans" required>
-    <label>Transaction Status</label><input id="withdraw_status" required>
-    <label>Method</label><input id="withdraw_method" required>
 
-    <label>Escolha a frase</label>
-    <div class="phrases-container">
-      <div class="phrase-item">
-        <input type="checkbox" name="withdraw_phrase" value="Please, share the withdrawal receipt for this transaction." onclick="onlyOne(this)">
-        <div>
-          <div class="phrase-en">Please, share the withdrawal receipt for this transaction.</div>
-          <div class="phrase-pt">Por favor, compartilhe o comprovante de saque desta transação.</div>
-        </div>
-      </div>
-
-      <div class="phrase-item">
-        <input type="checkbox" name="withdraw_phrase" value="The player claims that the deposit was not credited." onclick="onlyOne(this)">
-        <div>
-          <div class="phrase-en">The player claims that the deposit was not credited.</div>
-          <div class="phrase-pt">O jogador afirma que o depósito não foi creditado.</div>
-        </div>
-      </div>
-
-      <div class="phrase-item">
-        <input type="checkbox" name="withdraw_phrase" value="Rejected deposit, user says the amount did not return to his account" onclick="onlyOne(this)">
-        <div>
-          <div class="phrase-en">Rejected deposit, user says the amount did not return to his account</div>
-          <div class="phrase-pt">Depósito rejeitado, o usuário diz que o valor não retornou à sua conta.</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="buttons">
-      <button onclick="genWithdrawal()">Gerar</button>
-      <button class="copy" onclick="copyText('out_withdrawal')">Copiar</button>
-      <button class="telegram" onclick="sendTelegramDefault('out_withdrawal')">Telegram</button>
-      <button class="clear" onclick="clearSection('withdrawal')">Limpar</button>
-    </div>
-    <textarea id="out_withdrawal" readonly></textarea>
-  </div>
-
-  <div id="withdraw" class="box section">
-    <h1>Valor para Saque</h1>
-    <label>Account ID</label><input id="with_id" required>
-    <div class="buttons">
-      <button onclick="genWithdraw()">Gerar</button>
-      <button class="copy" onclick="copyText('out_withdraw')">Copiar</button>
-      <button class="telegram" onclick="sendTelegramDefault('out_withdraw')">Telegram</button>
-      <button class="clear" onclick="clearSection('withdraw')">Limpar</button>
-    </div>
-    <textarea id="out_withdraw" readonly></textarea>
-  </div>
-
-  <div id="unlock" class="box section">
-    <h1>Desbloquear Conta</h1>
-    <label>Account ID</label><input id="unlock_id" required>
-    <div class="buttons">
-      <button onclick="genUnlock()">Gerar</button>
-      <button class="copy" onclick="copyText('out_unlock')">Copiar</button>
-      <button class="telegram" onclick="sendTelegramDefault('out_unlock')">Telegram</button>
-      <button class="clear" onclick="clearSection('unlock')">Limpar</button>
-    </div>
-    <textarea id="out_unlock" readonly></textarea>
-  </div>
-
-  <div id="wager" class="box section">
-    <h1>Valor no Wager</h1>
-    <label>Account ID</label><input id="wager_id" required>
-    <div class="buttons">
-      <button onclick="genWager()">Gerar</button>
-      <button class="copy" onclick="copyText('out_wager')">Copiar</button>
-      <button class="telegram" onclick="sendTelegramDefault('out_wager')">Telegram</button>
-      <button class="clear" onclick="clearSection('wager')">Limpar</button>
-    </div>
-    <textarea id="out_wager" readonly></textarea>
-  </div>
-
-</div>
-
+<!-- =========================
+     JS DO MENU (apenas)
+========================= -->
 <script>
-  /* ===== content switching + clear ===== */
-  function closeAllSections(){
-    const active = document.querySelector('.section.active');
-    if(active){ clearSection(active.id); }
-    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-  }
-  function show(id){
-    closeAllSections();
-    const el = document.getElementById(id);
-    if (el) el.classList.add('active');
-  }
+  // Integração esperada no seu projeto:
+  // function closeAllSections() { ... }  // fecha/limpa conteúdo atual
+  // function showSection(id) { ... }     // abre a seção do formulário pelo ID
 
-  /* ===== desktop category open ===== */
-  function openCategory(catId, mobile=false){
-    closeAllSections();
+  const Menu = (() => {
+    const DESKTOP_SUBS = [
+      'sec_BB_com_Consultation_Information',
+      'sec_Technical_requests_BR'
+    ];
 
-    if(!mobile){
-      const col2 = document.getElementById('col2');
-      col2.classList.add('active');
+    function closeFormsAndCleanup(){
+      if (typeof closeAllSections === 'function') closeAllSections();
+    }
 
-      ['sec_BB_com_Consultation_Information','sec_Technical_requests_BR'].forEach(id=>{
+    function clearActive(){
+      document.querySelectorAll('.nav-item.active')
+        .forEach(b => b.classList.remove('active'));
+    }
+
+    function setActive(selector){
+      document.querySelectorAll(selector)
+        .forEach(b => b.classList.add('active'));
+    }
+
+    function clearDesktopSubmenus(){
+      DESKTOP_SUBS.forEach(id => {
         const el = document.getElementById(id);
-        if(el) el.style.display = 'none';
+        if (el) el.style.display = 'none';
       });
+    }
 
+    function openCategory(catId){
+      // ao trocar item/categoria: fecha/limpa conteúdo atual
+      closeFormsAndCleanup();
+
+      clearActive();
+
+      // destaca categoria
+      if (catId === 'BB_com_Consultation_Information') setActive('[data-nav="cat:BB"]');
+      if (catId === 'Technical_requests_BR') setActive('[data-nav="cat:TECH"]');
+
+      // abre submenu na coluna 2
+      clearDesktopSubmenus();
       const sec = document.getElementById('sec_' + catId);
-      if(sec) sec.style.display = 'block';
-      return;
+      if (sec) sec.style.display = 'block';
     }
 
-    // mobile: switch drawer view to secondary
-    openDrawerSecondary(catId);
-  }
+    function openForm(sectionId){
+      // ao trocar item/categoria: fecha/limpa conteúdo atual
+      closeFormsAndCleanup();
 
-  /* ===== Telegram ===== */
-  function copyText(id){
-    const t = document.getElementById(id);
-    if(!t.value){ alert("Gere o texto primeiro."); return; }
-    navigator.clipboard.writeText(t.value);
-  }
-  function sendTelegramEmail(id){ copyText(id); window.open("https://t.me/c/2262447946/4", "_blank"); }
-  function sendTelegramPhone(id){ copyText(id); window.open("https://t.me/c/2262447946/4", "_blank"); }
-  function sendTelegramDefault(id){ copyText(id); window.open("https://t.me/+9mCTJhflLbo1YWZh", "_blank"); }
+      // abre form
+      if (typeof showSection === 'function') showSection(sectionId);
 
-  /* ===== Clear ===== */
-  function clearSection(sectionId){
-    const section = document.getElementById(sectionId);
-    if(!section) return;
-    section.querySelectorAll('input').forEach(el => {
-      if(el.type === 'checkbox') el.checked = false;
-      else el.value = '';
-    });
-    section.querySelectorAll('textarea').forEach(t => t.value = '');
-  }
-  function onlyOne(checkbox){
-    const list = document.getElementsByName('withdraw_phrase');
-    list.forEach(item => { if(item !== checkbox) item.checked = false; });
-  }
-
-  /* ===== Generators ===== */
-  function genEmail(){
-    if(!email_from.value.trim() || !email_current.value.trim() || !email_new.value.trim() || !email_id.value.trim()){
-      alert("Preencha todos os campos."); return;
+      clearActive();
+      clearDesktopSubmenus(); // ao abrir atalho direto, limpa coluna 2
+      setActive(`[data-nav="form:${sectionId}"]`);
     }
-    out_email.value =
-`Customer wishes to change their e-mail.
 
-Email sent from - ${email_from.value}
+    function openSub(sectionId, catId){
+      // ao trocar item/categoria: fecha/limpa conteúdo atual
+      closeFormsAndCleanup();
 
-Current e-mail - ${email_current.value}
+      // abre sub/form
+      if (typeof showSection === 'function') showSection(sectionId);
 
-New e-mail - ${email_new.value}
+      clearActive();
 
-Account ID - ${email_id.value}`;
-  }
-  function genPhone(){
-    if(!phone_email.value.trim() || !phone_current.value.trim() || !phone_new.value.trim() || !phone_id.value.trim()){
-      alert("Preencha todos os campos."); return;
+      // mantém categoria e marca subitem
+      if (catId === 'BB_com_Consultation_Information') setActive('[data-nav="cat:BB"]');
+      if (catId === 'Technical_requests_BR') setActive('[data-nav="cat:TECH"]');
+
+      // marca sub (neste exemplo só existe um)
+      setActive('[data-nav="sub:second_line"]');
     }
-    out_phone.value =
-`Customer wishes to change their phone number.
 
-Email sent from - ${phone_email.value}
-
-Current phone - ${phone_current.value}
-
-New phone - ${phone_new.value}
-
-Account ID - ${phone_id.value}`;
-  }
-  function genWithdrawal(){
-    const vip = withdraw_vip.value.trim();
-    const client = withdraw_client.value.trim();
-    const trans = withdraw_trans.value.trim();
-    const status = withdraw_status.value.trim();
-    const method = withdraw_method.value.trim();
-    const phraseEl = document.querySelector('input[name="withdraw_phrase"]:checked');
-    if(!vip || !client || !trans || !status || !method || !phraseEl){
-      alert("Preencha todos os campos e escolha uma frase."); return;
-    }
-    out_withdrawal.value =
-`VIP: ${vip}
-Client ID: ${client}
-Transaction ID: ${trans}
-Transaction Status: ${status}
-Method: ${method}
-Country: Brazil
-Currency: BRL
-
-${phraseEl.value}`;
-  }
-  function genWithdraw(){
-    if(!with_id.value.trim()){ alert("Preencha todos os campos."); return; }
-    out_withdraw.value =
-`Customer requests withdrawal amount.
-
-Account ID - ${with_id.value}`;
-  }
-  function genUnlock(){
-    if(!unlock_id.value.trim()){ alert("Preencha todos os campos."); return; }
-    out_unlock.value =
-`Customer requests account unlock.
-
-Account ID - ${unlock_id.value}`;
-  }
-  function genWager(){
-    if(!wager_id.value.trim()){ alert("Preencha todos os campos."); return; }
-    out_wager.value =
-`Customer requests wager amount.
-
-Account ID - ${wager_id.value}`;
-  }
-
-  /* ===== Mobile drawer ===== */
-  const overlay = document.getElementById('overlay');
-  const drawer = document.getElementById('drawer');
-  const drawerMain = document.getElementById('drawerMain');
-  const drawerSecondary = document.getElementById('drawerSecondary');
-  const backBtn = document.getElementById('backBtn');
-  const drawerTitle = document.getElementById('drawerTitle');
-
-  function openDrawer(){
-    overlay.classList.add('show');
-    drawer.classList.add('open');
-    // always start on main
-    drawerMain.style.display = 'block';
-    drawerSecondary.style.display = 'none';
-    backBtn.style.display = 'none';
-    drawerTitle.textContent = 'Menu';
-  }
-
-  function closeDrawer(){
-    overlay.classList.remove('show');
-    drawer.classList.remove('open');
-  }
-
-  function openDrawerSecondary(catId){
-    // show secondary view
-    drawerMain.style.display = 'none';
-    drawerSecondary.style.display = 'block';
-    backBtn.style.display = 'inline-block';
-    drawerTitle.textContent = ''; // no repeating title
-
-    // hide all mobile secondary lists
-    ['sec_BB_com_Consultation_Information_m','sec_Technical_requests_BR_m'].forEach(id=>{
-      const el = document.getElementById(id);
-      if(el) el.style.display = 'none';
-    });
-
-    const sec = document.getElementById('sec_' + catId + '_m');
-    if(sec) sec.style.display = 'block';
-  }
-
-  function drawerBack(){
-    drawerSecondary.style.display = 'none';
-    drawerMain.style.display = 'block';
-    backBtn.style.display = 'none';
-    drawerTitle.textContent = 'Menu';
-  }
+    return { openCategory, openForm, openSub };
+  })();
 </script>
-
-</body>
-</html>
