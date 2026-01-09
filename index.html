@@ -8,44 +8,65 @@
 <style>
   body { margin:0; font-family: Arial, sans-serif; background:#f4f4f4; overflow-x:hidden; }
 
-  /* Sidebar */
-  .sidebar { position:fixed; width:240px; height:100vh; background:#2c2c2c; color:#fff; padding:14px 0; overflow-y:auto; }
-  .sidebar h2 { text-align:center; font-size:15px; margin:6px 0 10px; }
-
-  /* New icon categories (top) */
-  .icon-cats { display:flex; gap:10px; justify-content:center; padding:8px 10px 14px; }
-  .icon-btn {
-    width:72px; height:72px;
-    border:none; background:transparent; cursor:pointer;
-    display:flex; flex-direction:column; align-items:center; justify-content:center;
-    border-radius:10px;
+  /* LEFT + SECOND COLUMN (Telegram-like) */
+  .nav {
+    position: fixed;
+    left: 0; top: 0;
+    height: 100vh;
+    display: flex;
+    z-index: 5;
   }
-  .icon-btn:hover { background:#3a3a3a; }
-  .icon-btn img { width:44px; height:44px; display:block; }
-  .icon-btn span { font-size:10px; color:#ddd; margin-top:6px; text-align:center; line-height:1.1; }
 
-  .divider { height:1px; background:#444; margin:6px 14px; }
-
-  /* Old text menu (kept) */
-  .sidebar button.menu {
-    width:100%; background:none; border:none; color:#fff;
-    padding:10px 14px; text-align:left; cursor:pointer; font-size:13px;
+  .col {
+    width: 260px;
+    height: 100vh;
+    background: #2c2c2c;
+    color: #fff;
+    overflow-y: auto;
+    padding: 12px 0;
   }
-  .sidebar button.menu:hover { background:#444; }
 
-  /* Layout content */
-  .content { margin-left:240px; padding:15px; }
+  .col h2 {
+    margin: 6px 0 12px;
+    text-align:center;
+    font-size: 15px;
+  }
 
+  .divider { height:1px; background:#444; margin:10px 14px; }
+
+  /* Item style (icon left, text right) */
+  .nav-item {
+    width: 100%;
+    border: none;
+    background: transparent;
+    color: #fff;
+    cursor: pointer;
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-align: left;
+  }
+  .nav-item:hover { background:#444; }
+  .nav-item img { width: 30px; height: 30px; border-radius: 6px; }
+  .nav-item .title { font-size: 13px; font-weight: 700; }
+
+  /* hide/show second column */
+  .col2 { display:none; }
+  .col2.active { display:block; }
+
+  /* main content */
+  .content { margin-left: 520px; padding: 15px; } /* 260 + 260 */
   .box { background:#fff; padding:14px; border-radius:10px; max-width:760px; }
   h1 { font-size:17px; margin:0 0 8px 0; }
 
   label { font-size:12px; font-weight:bold; margin-top:6px; display:block; }
   input { width:100%; padding:6px; margin-top:3px; font-size:12px; box-sizing:border-box; }
-
   textarea { width:100%; height:110px; margin-top:8px; padding:6px; font-size:12px; box-sizing:border-box; }
 
   .buttons { display:flex; gap:6px; margin-top:8px; flex-wrap:wrap; }
   button { padding:6px 10px; font-size:12px; cursor:pointer; }
+
   .copy { background:#ddd; border:none; }
   .telegram { background:#2aabee; color:#fff; border:none; }
   .clear { background:#f0f0f0; border:1px solid #ccc; }
@@ -53,19 +74,8 @@
   .section { display:none; }
   .section.active { display:block; }
 
-  /* Secondary menu screen */
-  .sublist { margin-top:10px; display:flex; flex-direction:column; gap:8px; }
-  .subitem {
-    display:flex; align-items:center; gap:10px;
-    padding:10px; border:1px solid #e6e6e6; border-radius:10px;
-    cursor:pointer; background:#fff;
-  }
-  .subitem:hover { background:#fafafa; }
-  .subitem img { width:28px; height:28px; }
-  .subitem .title { font-size:13px; font-weight:bold; }
-  .subitem .desc { font-size:12px; color:#666; margin-top:2px; }
-
-  .chips { display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
+  /* Second line choices (buttons) */
+  .chips { display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; }
   .chip {
     border:1px solid #ddd; background:#fff; border-radius:999px;
     padding:8px 10px; cursor:pointer; font-size:12px;
@@ -80,10 +90,7 @@
     column-gap:8px;
     margin-bottom:10px;
   }
-  .phrase-item input[type="checkbox"]{
-    margin: 2px 0 0 0;
-    width: 14px; height: 14px;
-  }
+  .phrase-item input[type="checkbox"]{ margin:2px 0 0 0; width:14px; height:14px; }
   .phrase-en { font-size:12px; font-weight:bold; line-height:1.2; }
   .phrase-pt { font-size:12px; color:#555; margin-top:2px; line-height:1.2; }
 </style>
@@ -91,81 +98,88 @@
 
 <body>
 
-<div class="sidebar">
-  <h2>Demandas</h2>
+<!-- NAV: column 1 + column 2 -->
+<div class="nav">
+  <!-- Column 1 (Main categories + old menus below) -->
+  <div class="col col1">
+    <h2>Demandas</h2>
 
-  <!-- ✅ NEW CATEGORIES (TOP) -->
-  <div class="icon-cats">
-    <button class="icon-btn" onclick="openCategory('BB_com_Consultation_Information')" title="BB.com_Consultation_Information">
-      <img src="https://raw.githubusercontent.com/dertus/demandas/f52a6b2a5834a5d3e175ff2ae37c4783e0872c3b/images/BB.com_Consultation_Information.png" alt="BB.com_Consultation_Information">
-      <span>BB.com</span>
+    <!-- ✅ MAIN CATEGORIES (vertical) -->
+    <button class="nav-item" onclick="openCategory('BB_com_Consultation_Information')">
+      <img src="https://raw.githubusercontent.com/dertus/demandas/f52a6b2a5834a5d3e175ff2ae37c4783e0872c3b/images/BB.com_Consultation_Information.png" alt="">
+      <div class="title">BB.com_Consultation_Information</div>
     </button>
 
-    <button class="icon-btn" onclick="openCategory('Technical_requests_BR')" title="Technical requests BR">
-      <img src="https://raw.githubusercontent.com/dertus/demandas/b6794c60aacf5e1934aa3d099678f4ec9390fff3/images/Technical%20requests%20BR.png" alt="Technical requests BR">
-      <span>Tech</span>
+    <button class="nav-item" onclick="openCategory('Technical_requests_BR')">
+      <img src="https://raw.githubusercontent.com/dertus/demandas/b6794c60aacf5e1934aa3d099678f4ec9390fff3/images/Technical%20requests%20BR.png" alt="">
+      <div class="title">Technical requests BR</div>
     </button>
+
+    <div class="divider"></div>
+
+    <!-- ✅ OLD MENUS (kept below, same style) -->
+    <button class="nav-item" onclick="show('email')">
+      <img src="https://raw.githubusercontent.com/dertus/demandas/refs/heads/main/images/Second_Line.svg" alt="">
+      <div class="title">Mudar E-mail</div>
+    </button>
+
+    <button class="nav-item" onclick="show('phone')">
+      <img src="https://raw.githubusercontent.com/dertus/demandas/refs/heads/main/images/Second_Line.svg" alt="">
+      <div class="title">Mudar Telefone</div>
+    </button>
+
+    <button class="nav-item" onclick="show('withdrawal')">
+      <img src="https://raw.githubusercontent.com/dertus/demandas/b6794c60aacf5e1934aa3d099678f4ec9390fff3/images/Technical%20requests%20BR.png" alt="">
+      <div class="title">Comprovante de Saque</div>
+    </button>
+
+    <button class="nav-item" onclick="show('withdraw')">
+      <img src="https://raw.githubusercontent.com/dertus/demandas/b6794c60aacf5e1934aa3d099678f4ec9390fff3/images/Technical%20requests%20BR.png" alt="">
+      <div class="title">Valor para Saque</div>
+    </button>
+
+    <button class="nav-item" onclick="show('unlock')">
+      <img src="https://raw.githubusercontent.com/dertus/demandas/b6794c60aacf5e1934aa3d099678f4ec9390fff3/images/Technical%20requests%20BR.png" alt="">
+      <div class="title">Desbloquear Conta</div>
+    </button>
+
+    <button class="nav-item" onclick="show('wager')">
+      <img src="https://raw.githubusercontent.com/dertus/demandas/b6794c60aacf5e1934aa3d099678f4ec9390fff3/images/Technical%20requests%20BR.png" alt="">
+      <div class="title">Valor no Wager</div>
+    </button>
+
   </div>
 
-  <div class="divider"></div>
+  <!-- Column 2 (Secondary items) -->
+  <div class="col col2" id="col2">
+    <h2 id="col2title">Categoria</h2>
 
-  <!-- ✅ OLD MENUS (KEPT BELOW) -->
-  <button class="menu" onclick="show('email')">Mudar E-mail</button>
-  <button class="menu" onclick="show('phone')">Mudar Telefone</button>
-  <button class="menu" onclick="show('withdrawal')">Comprovante de Saque</button>
-  <button class="menu" onclick="show('withdraw')">Valor para Saque</button>
-  <button class="menu" onclick="show('unlock')">Desbloquear Conta</button>
-  <button class="menu" onclick="show('wager')">Valor no Wager</button>
+    <!-- BB.com secondary -->
+    <div id="sec_BB_com_Consultation_Information" style="display:none;">
+      <button class="nav-item" onclick="show('second_line')">
+        <img src="https://raw.githubusercontent.com/dertus/demandas/refs/heads/main/images/Second_Line.svg" alt="">
+        <div class="title">Second Line</div>
+      </button>
+    </div>
+
+    <!-- Tech secondary -->
+    <div id="sec_Technical_requests_BR" style="display:none;">
+      <!-- sem itens por enquanto -->
+    </div>
+  </div>
 </div>
 
+<!-- CONTENT -->
 <div class="content">
 
-  <!-- ✅ CATEGORY SCREENS (Secondary menus) -->
-
-  <div id="cat_BB_com_Consultation_Information" class="box section">
-    <h1>BB.com_Consultation_Information</h1>
-    <div class="sublist">
-
-      <!-- Item 1 estava vazio: não coloquei. -->
-
-      <!-- ✅ Item 2: Second Line -->
-      <div class="subitem" onclick="show('second_line')">
-        <img src="https://raw.githubusercontent.com/dertus/demandas/refs/heads/main/images/Second_Line.svg" alt="Second Line">
-        <div>
-          <div class="title">Second Line</div>
-          <div class="desc">Atalhos para Mudar E-mail e Mudar Telefone</div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <div id="cat_Technical_requests_BR" class="box section">
-    <h1>Technical requests BR</h1>
-    <div class="sublist">
-      <div class="subitem" onclick="alert('Ainda não há itens nessa categoria. Me mande os itens e ícones que eu adiciono.')">
-        <img src="https://raw.githubusercontent.com/dertus/demandas/b6794c60aacf5e1934aa3d099678f4ec9390fff3/images/Technical%20requests%20BR.png" alt="Tech">
-        <div>
-          <div class="title">Sem itens ainda</div>
-          <div class="desc">Envie os submenus desta categoria para eu incluir</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ✅ Second Line screen -->
+  <!-- Second Line screen -->
   <div id="second_line" class="box section">
     <h1>Second Line</h1>
     <div class="chips">
-      <div class="chip" onclick="show('email')">Abrir Mudar E-mail</div>
-      <div class="chip" onclick="show('phone')">Abrir Mudar Telefone</div>
-    </div>
-    <div style="margin-top:12px; font-size:12px; color:#666;">
-      Dica: aqui pode virar uma lista estilo Telegram com mais opções depois.
+      <div class="chip" onclick="show('email')">Mudar E-mail</div>
+      <div class="chip" onclick="show('phone')">Mudar Telefone</div>
     </div>
   </div>
-
-  <!-- ✅ EXISTING FORMS (unchanged features) -->
 
   <!-- MUDAR E-MAIL -->
   <div id="email" class="box section active">
@@ -306,8 +320,22 @@
   }
 
   function openCategory(catId){
-    // mostra a "tela" de categoria
-    show('cat_' + catId);
+    // Activate column 2
+    const col2 = document.getElementById('col2');
+    col2.classList.add('active');
+
+    // Set title
+    document.getElementById('col2title').textContent = catId;
+
+    // Hide all secondary groups
+    ['sec_BB_com_Consultation_Information','sec_Technical_requests_BR'].forEach(id=>{
+      const el = document.getElementById(id);
+      if(el) el.style.display = 'none';
+    });
+
+    // Show selected group
+    const sec = document.getElementById('sec_' + catId);
+    if(sec) sec.style.display = 'block';
   }
 
   function copyText(id){
@@ -316,43 +344,28 @@
     navigator.clipboard.writeText(t.value);
   }
 
-  // TELEGRAM LINKS
-  function sendTelegramEmail(id){
-    copyText(id);
-    window.open("https://t.me/c/2262447946/4", "_blank");
-  }
-  function sendTelegramPhone(id){
-    copyText(id);
-    window.open("https://t.me/c/2262447946/4", "_blank");
-  }
-  function sendTelegramDefault(id){
-    copyText(id);
-    window.open("https://t.me/+9mCTJhflLbo1YWZh", "_blank");
-  }
+  function sendTelegramEmail(id){ copyText(id); window.open("https://t.me/c/2262447946/4", "_blank"); }
+  function sendTelegramPhone(id){ copyText(id); window.open("https://t.me/c/2262447946/4", "_blank"); }
+  function sendTelegramDefault(id){ copyText(id); window.open("https://t.me/+9mCTJhflLbo1YWZh", "_blank"); }
 
   function clearSection(sectionId){
     const section = document.getElementById(sectionId);
     if(!section) return;
-
     section.querySelectorAll('input').forEach(el => {
       if(el.type === 'checkbox') el.checked = false;
       else el.value = '';
     });
-
     section.querySelectorAll('textarea').forEach(t => t.value = '');
   }
 
-  // ✅ Only one checkbox
   function onlyOne(checkbox){
     const list = document.getElementsByName('withdraw_phrase');
     list.forEach(item => { if(item !== checkbox) item.checked = false; });
   }
 
-  // Generators
   function genEmail(){
     if(!email_from.value.trim() || !email_current.value.trim() || !email_new.value.trim() || !email_id.value.trim()){
-      alert("Preencha todos os campos.");
-      return;
+      alert("Preencha todos os campos."); return;
     }
     out_email.value =
 `Customer wishes to change their e-mail.
@@ -368,8 +381,7 @@ Account ID - ${email_id.value}`;
 
   function genPhone(){
     if(!phone_email.value.trim() || !phone_current.value.trim() || !phone_new.value.trim() || !phone_id.value.trim()){
-      alert("Preencha todos os campos.");
-      return;
+      alert("Preencha todos os campos."); return;
     }
     out_phone.value =
 `Customer wishes to change their phone number.
@@ -392,8 +404,7 @@ Account ID - ${phone_id.value}`;
     const phraseEl = document.querySelector('input[name="withdraw_phrase"]:checked');
 
     if(!vip || !client || !trans || !status || !method || !phraseEl){
-      alert("Preencha todos os campos e escolha uma frase.");
-      return;
+      alert("Preencha todos os campos e escolha uma frase."); return;
     }
 
     out_withdrawal.value =
@@ -409,10 +420,7 @@ ${phraseEl.value}`;
   }
 
   function genWithdraw(){
-    if(!with_id.value.trim()){
-      alert("Preencha todos os campos.");
-      return;
-    }
+    if(!with_id.value.trim()){ alert("Preencha todos os campos."); return; }
     out_withdraw.value =
 `Customer requests withdrawal amount.
 
@@ -420,10 +428,7 @@ Account ID - ${with_id.value}`;
   }
 
   function genUnlock(){
-    if(!unlock_id.value.trim()){
-      alert("Preencha todos os campos.");
-      return;
-    }
+    if(!unlock_id.value.trim()){ alert("Preencha todos os campos."); return; }
     out_unlock.value =
 `Customer requests account unlock.
 
@@ -431,10 +436,7 @@ Account ID - ${unlock_id.value}`;
   }
 
   function genWager(){
-    if(!wager_id.value.trim()){
-      alert("Preencha todos os campos.");
-      return;
-    }
+    if(!wager_id.value.trim()){ alert("Preencha todos os campos."); return; }
     out_wager.value =
 `Customer requests wager amount.
 
