@@ -8,6 +8,32 @@
 <style>
   body { margin:0; font-family: Arial, sans-serif; background:#f4f4f4; overflow-x:hidden; }
 
+  /* Topbar (mobile) */
+  .topbar{
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 52px;
+    background: #2c2c2c;
+    color: #fff;
+    display: none;
+    align-items: center;
+    padding: 0 12px;
+    z-index: 20;
+    gap: 10px;
+  }
+  .topbar .menuBtn{
+    border: none;
+    background: transparent;
+    color: #fff;
+    font-size: 22px;
+    cursor: pointer;
+    padding: 6px 8px;
+    border-radius: 8px;
+  }
+  .topbar .menuBtn:hover{ background:#444; }
+  .topbar .title{ font-size: 14px; font-weight: 700; opacity: .95; }
+
+  /* NAV (desktop default: fixed 2 columns) */
   .nav { position: fixed; left: 0; top: 0; height: 100vh; display: flex; z-index: 5; }
   .col { width: 260px; height: 100vh; background: #2c2c2c; color: #fff; overflow-y: auto; padding: 12px 0; }
   .divider { height:1px; background:#444; margin:10px 14px; }
@@ -31,6 +57,7 @@
   .col2 { display:none; }
   .col2.active { display:block; }
 
+  /* Content */
   .content { margin-left: 520px; padding: 15px; }
   .box { background:#fff; padding:14px; border-radius:10px; max-width:760px; }
   h1 { font-size:17px; margin:0 0 8px 0; }
@@ -57,16 +84,145 @@
   .phrase-item input[type="checkbox"]{ margin:2px 0 0 0; width:14px; height:14px; }
   .phrase-en { font-size:12px; font-weight:bold; line-height:1.2; }
   .phrase-pt { font-size:12px; color:#555; margin-top:2px; line-height:1.2; }
+
+  /* ===== MOBILE ===== */
+  .overlay{
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,.45);
+    display: none;
+    z-index: 19;
+  }
+
+  .drawer{
+    position: fixed;
+    top: 0; left: 0;
+    height: 100vh;
+    width: min(92vw, 340px);
+    background: #2c2c2c;
+    transform: translateX(-105%);
+    transition: transform .25s ease;
+    z-index: 21;
+    overflow-y: auto;
+    padding: 10px 0;
+  }
+  .drawer.open{ transform: translateX(0); }
+  .drawerHeader{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding: 6px 12px 10px;
+    color:#fff;
+    font-weight:700;
+    font-size: 14px;
+  }
+  .backBtn{
+    border:none;
+    background: transparent;
+    color:#fff;
+    cursor:pointer;
+    font-size: 18px;
+    padding: 6px 8px;
+    border-radius: 8px;
+    display:none;
+  }
+  .backBtn:hover{ background:#444; }
+
+  /* On mobile, nav is hidden and replaced with drawer */
+  @media (max-width: 900px){
+    .topbar{ display:flex; }
+    .nav{ display:none; }
+    .content{ margin-left: 0; padding: 70px 12px 14px; }
+    .box{ max-width: 100%; }
+    .overlay.show{ display:block; }
+  }
 </style>
 </head>
 
 <body>
 
-<div class="nav">
-  <!-- Column 1 (NO TITLE NOW) -->
-  <div class="col col1">
+<!-- MOBILE TOPBAR -->
+<div class="topbar">
+  <button class="menuBtn" onclick="openDrawer()">☰</button>
+  <div class="title">Demandas</div>
+</div>
 
+<!-- MOBILE OVERLAY + DRAWER -->
+<div class="overlay" id="overlay" onclick="closeDrawer()"></div>
+
+<div class="drawer" id="drawer">
+  <div class="drawerHeader">
+    <button class="backBtn" id="backBtn" onclick="drawerBack()">←</button>
+    <div id="drawerTitle">Menu</div>
+  </div>
+
+  <!-- Drawer MAIN (equiv col1) -->
+  <div id="drawerMain">
     <!-- MAIN CATEGORIES -->
+    <button class="nav-item" onclick="openCategory('BB_com_Consultation_Information', true)">
+      <img src="https://raw.githubusercontent.com/dertus/demandas/f52a6b2a5834a5d3e175ff2ae37c4783e0872c3b/images/BB.com_Consultation_Information.png" alt="">
+      <div class="title">BB.com_Consultation_Information</div>
+    </button>
+
+    <button class="nav-item" onclick="openCategory('Technical_requests_BR', true)">
+      <img src="https://raw.githubusercontent.com/dertus/demandas/b6794c60aacf5e1934aa3d099678f4ec9390fff3/images/Technical%20requests%20BR.png" alt="">
+      <div class="title">Technical requests BR</div>
+    </button>
+
+    <div class="divider"></div>
+
+    <!-- OLD MENUS -->
+    <button class="nav-item" onclick="show('email'); closeDrawer();">
+      <img src="https://raw.githubusercontent.com/dertus/demandas/refs/heads/main/images/Second_Line.svg" alt="">
+      <div class="title">Mudar E-mail</div>
+    </button>
+
+    <button class="nav-item" onclick="show('phone'); closeDrawer();">
+      <img src="https://raw.githubusercontent.com/dertus/demandas/refs/heads/main/images/Second_Line.svg" alt="">
+      <div class="title">Mudar Telefone</div>
+    </button>
+
+    <button class="nav-item" onclick="show('withdrawal'); closeDrawer();">
+      <img src="https://raw.githubusercontent.com/dertus/demandas/b6794c60aacf5e1934aa3d099678f4ec9390fff3/images/Technical%20requests%20BR.png" alt="">
+      <div class="title">Comprovante de Saque</div>
+    </button>
+
+    <button class="nav-item" onclick="show('withdraw'); closeDrawer();">
+      <img src="https://raw.githubusercontent.com/dertus/demandas/b6794c60aacf5e1934aa3d099678f4ec9390fff3/images/Technical%20requests%20BR.png" alt="">
+      <div class="title">Valor para Saque</div>
+    </button>
+
+    <button class="nav-item" onclick="show('unlock'); closeDrawer();">
+      <img src="https://raw.githubusercontent.com/dertus/demandas/b6794c60aacf5e1934aa3d099678f4ec9390fff3/images/Technical%20requests%20BR.png" alt="">
+      <div class="title">Desbloquear Conta</div>
+    </button>
+
+    <button class="nav-item" onclick="show('wager'); closeDrawer();">
+      <img src="https://raw.githubusercontent.com/dertus/demandas/b6794c60aacf5e1934aa3d099678f4ec9390fff3/images/Technical%20requests%20BR.png" alt="">
+      <div class="title">Valor no Wager</div>
+    </button>
+  </div>
+
+  <!-- Drawer SECONDARY (equiv col2) -->
+  <div id="drawerSecondary" style="display:none;">
+    <div id="sec_BB_com_Consultation_Information_m">
+      <button class="nav-item" onclick="show('second_line'); closeDrawer();">
+        <img src="https://raw.githubusercontent.com/dertus/demandas/refs/heads/main/images/Second_Line.svg" alt="">
+        <div class="title">Second Line</div>
+      </button>
+    </div>
+
+    <div id="sec_Technical_requests_BR_m">
+      <!-- sem itens por enquanto -->
+      <div style="padding: 10px 14px; color:#bbb; font-size:12px;">
+        Sem itens ainda.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DESKTOP NAV -->
+<div class="nav">
+  <div class="col col1">
     <button class="nav-item" onclick="openCategory('BB_com_Consultation_Information')">
       <img src="https://raw.githubusercontent.com/dertus/demandas/f52a6b2a5834a5d3e175ff2ae37c4783e0872c3b/images/BB.com_Consultation_Information.png" alt="">
       <div class="title">BB.com_Consultation_Information</div>
@@ -79,7 +235,6 @@
 
     <div class="divider"></div>
 
-    <!-- OLD MENUS -->
     <button class="nav-item" onclick="show('email')">
       <img src="https://raw.githubusercontent.com/dertus/demandas/refs/heads/main/images/Second_Line.svg" alt="">
       <div class="title">Mudar E-mail</div>
@@ -111,7 +266,6 @@
     </button>
   </div>
 
-  <!-- Column 2 -->
   <div class="col col2" id="col2">
     <div id="sec_BB_com_Consultation_Information" style="display:none;">
       <button class="nav-item" onclick="show('second_line')">
@@ -126,6 +280,7 @@
   </div>
 </div>
 
+<!-- CONTENT -->
 <div class="content">
 
   <div id="second_line" class="box section">
@@ -251,45 +406,51 @@
 </div>
 
 <script>
+  /* ===== content switching + clear ===== */
   function closeAllSections(){
     const active = document.querySelector('.section.active');
-    if(active){
-      clearSection(active.id);
-    }
+    if(active){ clearSection(active.id); }
     document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   }
-
   function show(id){
     closeAllSections();
     const el = document.getElementById(id);
     if (el) el.classList.add('active');
   }
 
-  function openCategory(catId){
+  /* ===== desktop category open ===== */
+  function openCategory(catId, mobile=false){
     closeAllSections();
 
-    const col2 = document.getElementById('col2');
-    col2.classList.add('active');
+    if(!mobile){
+      const col2 = document.getElementById('col2');
+      col2.classList.add('active');
 
-    ['sec_BB_com_Consultation_Information','sec_Technical_requests_BR'].forEach(id=>{
-      const el = document.getElementById(id);
-      if(el) el.style.display = 'none';
-    });
+      ['sec_BB_com_Consultation_Information','sec_Technical_requests_BR'].forEach(id=>{
+        const el = document.getElementById(id);
+        if(el) el.style.display = 'none';
+      });
 
-    const sec = document.getElementById('sec_' + catId);
-    if(sec) sec.style.display = 'block';
+      const sec = document.getElementById('sec_' + catId);
+      if(sec) sec.style.display = 'block';
+      return;
+    }
+
+    // mobile: switch drawer view to secondary
+    openDrawerSecondary(catId);
   }
 
+  /* ===== Telegram ===== */
   function copyText(id){
     const t = document.getElementById(id);
     if(!t.value){ alert("Gere o texto primeiro."); return; }
     navigator.clipboard.writeText(t.value);
   }
-
   function sendTelegramEmail(id){ copyText(id); window.open("https://t.me/c/2262447946/4", "_blank"); }
   function sendTelegramPhone(id){ copyText(id); window.open("https://t.me/c/2262447946/4", "_blank"); }
   function sendTelegramDefault(id){ copyText(id); window.open("https://t.me/+9mCTJhflLbo1YWZh", "_blank"); }
 
+  /* ===== Clear ===== */
   function clearSection(sectionId){
     const section = document.getElementById(sectionId);
     if(!section) return;
@@ -299,12 +460,12 @@
     });
     section.querySelectorAll('textarea').forEach(t => t.value = '');
   }
-
   function onlyOne(checkbox){
     const list = document.getElementsByName('withdraw_phrase');
     list.forEach(item => { if(item !== checkbox) item.checked = false; });
   }
 
+  /* ===== Generators ===== */
   function genEmail(){
     if(!email_from.value.trim() || !email_current.value.trim() || !email_new.value.trim() || !email_id.value.trim()){
       alert("Preencha todos os campos."); return;
@@ -320,7 +481,6 @@ New e-mail - ${email_new.value}
 
 Account ID - ${email_id.value}`;
   }
-
   function genPhone(){
     if(!phone_email.value.trim() || !phone_current.value.trim() || !phone_new.value.trim() || !phone_id.value.trim()){
       alert("Preencha todos os campos."); return;
@@ -336,7 +496,6 @@ New phone - ${phone_new.value}
 
 Account ID - ${phone_id.value}`;
   }
-
   function genWithdrawal(){
     const vip = withdraw_vip.value.trim();
     const client = withdraw_client.value.trim();
@@ -358,7 +517,6 @@ Currency: BRL
 
 ${phraseEl.value}`;
   }
-
   function genWithdraw(){
     if(!with_id.value.trim()){ alert("Preencha todos os campos."); return; }
     out_withdraw.value =
@@ -366,7 +524,6 @@ ${phraseEl.value}`;
 
 Account ID - ${with_id.value}`;
   }
-
   function genUnlock(){
     if(!unlock_id.value.trim()){ alert("Preencha todos os campos."); return; }
     out_unlock.value =
@@ -374,13 +531,59 @@ Account ID - ${with_id.value}`;
 
 Account ID - ${unlock_id.value}`;
   }
-
   function genWager(){
     if(!wager_id.value.trim()){ alert("Preencha todos os campos."); return; }
     out_wager.value =
 `Customer requests wager amount.
 
 Account ID - ${wager_id.value}`;
+  }
+
+  /* ===== Mobile drawer ===== */
+  const overlay = document.getElementById('overlay');
+  const drawer = document.getElementById('drawer');
+  const drawerMain = document.getElementById('drawerMain');
+  const drawerSecondary = document.getElementById('drawerSecondary');
+  const backBtn = document.getElementById('backBtn');
+  const drawerTitle = document.getElementById('drawerTitle');
+
+  function openDrawer(){
+    overlay.classList.add('show');
+    drawer.classList.add('open');
+    // always start on main
+    drawerMain.style.display = 'block';
+    drawerSecondary.style.display = 'none';
+    backBtn.style.display = 'none';
+    drawerTitle.textContent = 'Menu';
+  }
+
+  function closeDrawer(){
+    overlay.classList.remove('show');
+    drawer.classList.remove('open');
+  }
+
+  function openDrawerSecondary(catId){
+    // show secondary view
+    drawerMain.style.display = 'none';
+    drawerSecondary.style.display = 'block';
+    backBtn.style.display = 'inline-block';
+    drawerTitle.textContent = ''; // no repeating title
+
+    // hide all mobile secondary lists
+    ['sec_BB_com_Consultation_Information_m','sec_Technical_requests_BR_m'].forEach(id=>{
+      const el = document.getElementById(id);
+      if(el) el.style.display = 'none';
+    });
+
+    const sec = document.getElementById('sec_' + catId + '_m');
+    if(sec) sec.style.display = 'block';
+  }
+
+  function drawerBack(){
+    drawerSecondary.style.display = 'none';
+    drawerMain.style.display = 'block';
+    backBtn.style.display = 'none';
+    drawerTitle.textContent = 'Menu';
   }
 </script>
 
